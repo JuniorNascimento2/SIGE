@@ -42,7 +42,6 @@
       <thead>
         <tr class="tabela-principal">
           <th class="tabela-cabecalho">NOME</th>
-          <th class="tabela-cabecalho">SOBRENOME</th>
           <th class="tabela-cabecalho">EMAIL</th>
           <th class="tabela-cabecalho">AÇÕES</th>
         </tr>
@@ -50,8 +49,7 @@
       <tbody>
         {% for professor in professores %}
         <tr class="linhas-tabela">
-          <td class="tabela-info">{{ professor.user.first_name }}</td>
-          <td class="tabela-info">{{ professor.user.last_name }}</td>
+          <td class="tabela-info">{{ professor.nome_completo }}</td>
           <td class="tabela-info">{{ professor.user.email }}</td>
           <td class="tabela-icones">
             <a href="{% url 'editar_professor' professor.id %}" class="action-btn editar" title="Editar">
