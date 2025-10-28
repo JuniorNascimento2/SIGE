@@ -72,9 +72,11 @@ class NotaForm(forms.ModelForm):
         fields = ['nota1', 'nota2', 'nota3', 'nota4']
 
 
-# --- EDITAR PERFIL SUPERUSUÁRIO ---
 class EditarPerfilForm(forms.ModelForm):
-    nome_completo = forms.CharField(label='Nome completo')
+    nome_completo = forms.CharField(
+        label='Nome completo',
+        required=True  # Se quiser obrigatório, deixa True, senão False
+    )
     nova_senha = forms.CharField(
         required=False,
         label='Nova senha (opcional)',
@@ -84,6 +86,21 @@ class EditarPerfilForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['nome_completo', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and (not self.initial.get('nome_completo')):
+            # inicializa o campo com first_name + last_name
+            self.initial['nome_completo'] = f"{self.instance.first_name} {self.instance.last_name}"
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        nome = self.cleaned_data['nome_completo'].strip().split(' ', 1)
+        user.first_name = nome[0]
+        user.last_name = nome[1] if len(nome) > 1 else ''
+        if commit:
+            user.save()
+        return user
 
 
 # --- EDITAR PERFIL PROFESSOR ---

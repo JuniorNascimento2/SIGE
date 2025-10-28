@@ -61,6 +61,7 @@ def painel_super(request):
     })
 
 
+
 @login_required
 @user_passes_test(is_superuser)
 def editar_perfil(request):
@@ -68,12 +69,17 @@ def editar_perfil(request):
     if request.method == 'POST':
         form = EditarPerfilForm(request.POST, instance=user)
         if form.is_valid():
-            nova_senha = form.cleaned_data.get('nova_senha')
+            # Salva dados normais (nome, email) sem alterar a senha
             user = form.save(commit=False)
+            user.save()
+            
+            # Só altera a senha se algo foi digitado
+            nova_senha = form.cleaned_data.get('nova_senha')
             if nova_senha:
                 user.set_password(nova_senha)
+                user.save()
                 update_session_auth_hash(request, user)
-            user.save()
+            
             messages.success(request, "Perfil atualizado com sucesso.")
             return redirect('painel_super')
     else:
