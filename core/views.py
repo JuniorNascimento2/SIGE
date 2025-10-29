@@ -21,7 +21,6 @@ def login_view(request):
         elif hasattr(request.user, 'gestor'):
             return redirect('painel_gestor')
 
-
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -33,10 +32,13 @@ def login_view(request):
                 return redirect('painel_professor')
             elif hasattr(user, 'aluno'):
                 return redirect('painel_aluno')
+            elif hasattr(user, 'gestor'):
+                return redirect('painel_gestor')  # <- adicionado
     else:
         form = LoginForm()
 
     return render(request, 'core/login.html', {'form': form})
+
 
 
 def logout_view(request):
@@ -61,6 +63,7 @@ def painel_super(request):
     })
 
 
+
 @login_required
 @user_passes_test(is_superuser)
 def editar_perfil(request):
@@ -68,12 +71,17 @@ def editar_perfil(request):
     if request.method == 'POST':
         form = EditarPerfilForm(request.POST, instance=user)
         if form.is_valid():
-            nova_senha = form.cleaned_data.get('nova_senha')
+            # Salva dados normais (nome, email) sem alterar a senha
             user = form.save(commit=False)
+            user.save()
+            
+            # Só altera a senha se algo foi digitado
+            nova_senha = form.cleaned_data.get('nova_senha')
             if nova_senha:
                 user.set_password(nova_senha)
+                user.save()
                 update_session_auth_hash(request, user)
-            user.save()
+            
             messages.success(request, "Perfil atualizado com sucesso.")
             return redirect('painel_super')
     else:
@@ -172,10 +180,8 @@ def painel_gestor(request):
 
 # ---- GESTORES ----
 @login_required
-@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor') and u.gestor.cargo in ['diretor', 'vice_diretor'])
+@user_passes_test(lambda u: u.is_superuser or (hasattr(u, 'gestor') and u.gestor.cargo in ['diretor', 'vice_diretor']))
 def cadastrar_gestor(request):
-    from .forms import GestorForm
-    erro = None
     if request.method == 'POST':
         form = GestorForm(request.POST)
         if form.is_valid():
@@ -184,18 +190,22 @@ def cadastrar_gestor(request):
             senha = form.cleaned_data['senha']
             cargo = form.cleaned_data['cargo']
 
+            # Cria user e gestor
             user = User.objects.create_user(username=email, email=email, password=senha)
             Gestor.objects.create(user=user, nome_completo=nome_completo, cargo=cargo)
             messages.success(request, f"{cargo.title()} {nome_completo} cadastrado com sucesso!")
             return redirect('listar_gestores')
     else:
         form = GestorForm()
-    return render(request, 'core/cadastrar_gestor.html', {'form': form, 'erro': erro})
+
+    return render(request, 'core/cadastrar_gestor.html', {'form': form})
 
 # ---- GESTOR (Painel da Gestão Escolar) ----
 @login_required
 def painel_gestor(request):
+    # Pega o gestor logado
     if not hasattr(request.user, 'gestor'):
+        messages.error(request, "Você não é um gestor.")
         return redirect('login')
 
     gestor = request.user.gestor
@@ -232,9 +242,42 @@ def excluir_gestor(request, gestor_id):
     messages.success(request, 'Gestor excluído com sucesso.')
     return redirect('listar_gestores')
 
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import GestorForm
+from .models import Gestor
+
+@login_required
+@login_required
+def editar_gestor(request, gestor_id):
+    gestor = get_object_or_404(Gestor, id=gestor_id)
+    user = gestor.user
+
+    # Permissão: superusuário ou o próprio gestor
+    if not (request.user.is_superuser or (hasattr(request.user, 'gestor') and request.user.gestor == gestor)):
+        messages.error(request, "Você não tem permissão para editar este gestor.")
+        return redirect('painel_gestor')
+
+    if request.method == 'POST':
+        form = GestorForm(request.POST, instance=gestor, request=request)  # passa request
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Gestor atualizado com sucesso!')
+            return redirect('painel_gestor')
+        else:
+            messages.error(request, 'Corrija os erros abaixo.')
+    else:
+        form = GestorForm(instance=gestor, initial={'email': user.email})
+
+    return render(request, 'core/editar_gestor.html', {'form': form, 'gestor': gestor})
+
+
+
 # -------------------- ALUNOS --------------------
 @login_required
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def listar_alunos(request):
     query = request.GET.get('q', '')
     alunos = Aluno.objects.filter(nome_completo__icontains=query) if query else Aluno.objects.all()
@@ -307,6 +350,8 @@ def excluir_aluno(request, aluno_id):
     aluno.delete()
     messages.success(request, 'Aluno removido.')
     return redirect('listar_alunos')
+
+
 
 
 # -------------------- PERFIL ALUNO --------------------

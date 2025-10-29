@@ -10,11 +10,13 @@
 
 {% block user_info %}
   <span>Olá, 
-    <a href="#" title="Editar Perfil">{{ gestor.nome_completo }}</a> 
+    <a href="{% url 'editar_gestor' gestor.id %}" title="Editar Perfil">{{ gestor.nome_completo|default:request.user.username }}</a> 
     ({{ gestor.get_cargo_display }})
   </span>
+  <a href="{% url 'editar_gestor' gestor.id %}" title="Editar Perfil"><i class="fas fa-user"></i></a>
   <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
 {% endblock %}
+
 
 {% block content %}
 <div class="dashboard-container">
@@ -46,6 +48,11 @@
     </div>
   </div>
 
+
+   <a href="{% url 'listar_alunos' %}" class="icone" title="Gerenciar Alunos">
+      <img src="{% static 'core/img/aluno.png' %}" alt="Aluno" />
+      <p>Discentes</p>
+    </a>
   {% if cargo in 'diretor vice_diretor' or user.is_superuser %}
   <div class="gestao-container">
     <h2>Gestão Escolar</h2>
@@ -54,11 +61,6 @@
   </div>
   {% endif %}
 
-  {% if cargo == 'secretario' %}
-  <div class="info-box">
-    <p><strong>Observação:</strong> Secretários não podem cadastrar novos gestores.</p>
-  </div>
-  {% endif %}
 </div>
 {% endblock %}
 

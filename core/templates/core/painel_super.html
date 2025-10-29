@@ -7,7 +7,7 @@
 
 {% block user_info %}
   
-  <span>Olá, <a href="{% url 'editar_perfil_super' %}" title="Editar Perfil">{{ request.user.get_full_name|default:request.user.username }}</a></span>
+  <span>Olá, <a href="{% url 'editar_perfil_super' %}" title="Editar Perfil">{{ request.user.first_name|default:request.user.username }}</a></span>
   <a href="{% url 'editar_perfil_super' %}" title="Editar Perfil"><i class="fas fa-user"></i></a>
   
   <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
@@ -40,7 +40,6 @@
   <div class="gestao-container">
     <h2>Gestão Escolar</h2>
     <a href="{% url 'listar_gestores' %}" class="btn">Gerenciar Gestores</a>
-    <a href="{% url 'cadastrar_gestor' %}" class="btn">Cadastrar Gestor</a>
   </div>
   {% endif %}
   </section>

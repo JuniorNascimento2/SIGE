@@ -55,7 +55,7 @@
       <tbody>
         {% for aluno in alunos %}
         <tr class="linhas-tabela">
-          <td class="tabela-info">{{ aluno.user.first_name }}</td>
+          <td class="tabela-info">{{ aluno.nome_completo }}</td>
           <td class="tabela-info">{{ aluno.idade }}</td>
           <td class="tabela-info">{{ aluno.user.email }}</td>
           <td class="tabela-info">{{ aluno.turma.nome }}</td>

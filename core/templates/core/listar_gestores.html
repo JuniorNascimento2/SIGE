@@ -1,7 +1,9 @@
 {% extends 'core/base.html' %}
+
 {% block content %}
 <h2>Gestores Cadastrados</h2>
 <a href="{% url 'cadastrar_gestor' %}">Cadastrar Novo</a>
+
 <table border="1">
   <tr>
     <th>Nome</th>
@@ -9,14 +11,17 @@
     <th>Email</th>
     <th>Ações</th>
   </tr>
+
   {% for gestor in gestores %}
   <tr>
     <td>{{ gestor.nome_completo }}</td>
     <td>{{ gestor.get_cargo_display }}</td>
     <td>{{ gestor.user.email }}</td>
+
     <td>
-      {% if user.is_superuser or user.gestor.cargo in 'diretor,vice_diretor' %}
-      <a href="{% url 'excluir_gestor' gestor.id %}">Excluir</a>
+      {% if user.is_superuser or user.gestor.cargo == 'diretor' or user.gestor.cargo == 'vice_diretor' %}
+        <a href="{% url 'editar_gestor' gestor.id %}">Editar</a> |
+        <a href="{% url 'excluir_gestor' gestor.id %}">Excluir</a>
       {% endif %}
     </td>
   </tr>

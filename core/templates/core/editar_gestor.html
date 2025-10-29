@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2>Editar Gestor: {{ gestor.nome_completo }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar Alterações</button>
+    <a href="{% url 'listar_gestores' %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

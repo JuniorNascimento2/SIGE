@@ -59,6 +59,7 @@ class Gestor(models.Model):
         ('diretor', 'Diretor'),
         ('vice_diretor', 'Vice-Diretor'),
         ('secretario', 'Secretário'),
+        ('coordenador', 'Coordenador'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome_completo = models.CharField(max_length=150)

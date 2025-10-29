@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background-color: #d3d3d3;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+/* CAIXA PRINCIPAL */
+.login-box {
+  display: flex;
+  width: 100%;
+  background-color: #c8d9dd;
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 450px;
+  border-radius: 30px;
+}
+
+/* LOGO ocupa 80% */
+.logo-area {
+  background-color: #1a2530;
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 45px 25px;
+  border-radius: 30px;
+}
+
+.logo {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  object-fit: contain;
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.logo:hover {
+  transform: scale(1.25);
+}
+
+.SIGE {
+  color: white;
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+}
+
+.subtitulo {
+  color: #dcdcdc;
+  font-size: 15px;
+  font-style: italic;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+/* Linha branca abaixo do subtítulo */
+.subtitulo::after {
+  content: "";
+  display: block;
+  width: 170px;
+  height: 2px;
+  background-color: #ffffff;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* FORMULÁRIO ocupa 20% */
+.form-area {
+  flex: 0.3;
+  padding: 50px 30px;
+  background-color: #c8d9dd;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Título LOGIN com Poppins */
+.form-area h2 {
+  margin-top: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: #000000;
+  margin-bottom: 25px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 12px 12px 12px 45px;
+  border-top: none;
+  border-left: none;
+  border-bottom: 3px solid gray;
+  border-right: 3px solid gray;
+  border-radius: 7px;
+  background-color: #fffffe;
+  color: #000000;
+  outline: none;
+  font-size: 15px;
+  transition: border 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
+}
+
+.input-container input::placeholder {
+  color: #000000;
+  opacity: 0.8;
+  font-family: Helvetica, sans-serif;
+}
+
+.input-container .icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #000000;
+  font-size: 16px;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.input-container input:focus {
+  background-color: #ffffff;
+  border-bottom: 5px solid grey;
+  border-right: 5px solid grey;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.input-container input:focus + .icon {
+  color: grey;
+  transform: translateY(-50%) scale(1.2);
+}
+
+button {
+  margin-top: 20px;
+  background-color: #2a6ed2;
+  color: #ffffff;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  color: #2a6ed2;
+  background-color: #ffffff;
+  transform: scale(1.05);
+  border: 2px solid grey;
+}
+
+.forgot-link {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #000;
+  opacity: 0.8;
+}
+
+.forgot-link:hover {
+  opacity: 1;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+  body {
+    height: auto; 
+    display: block;
+    padding-top: 5px;
+  }
+
+  .login-box {
+    flex-direction: column;
+    min-height: auto;
+    margin: 0 auto; 
+  }
+
+  .logo-area {
+    flex: none;
+    padding: 30px 15px;
+    border-radius: 20px 20px 30px 30px;
+  }
+
+  .logo {
+    max-width: 150px;
+    transform: scale(1);
+  }
+
+  .SIGE {
+    font-size: 32px;
+    letter-spacing: 3px;
+    margin-top: 10px;
+  }
+
+  .subtitulo {
+    font-size: 14px;
+    color: #f0f0f0;
+  }
+
+  .subtitulo::after {
+    width: 120px;
+    height: 2px;
+  }
+
+  .form-area {
+    flex: none;
+    border-radius: 0 0 20px 20px;
+    padding: 40px 25px;
+    margin-bottom: 80px;
+  }
+
+  .input-container {
+    width: 85%;
+  }
+
+  .input-container input {
+    padding: 18px 12px 18px 45px;
+    font-size: 18px;
+  }
+
+  button {
+    padding: 15px 30px;
+    font-size: 18px
+  }
+}

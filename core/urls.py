@@ -45,6 +45,8 @@ urlpatterns = [
     path('gestores/cadastrar/', views.cadastrar_gestor, name='cadastrar_gestor'),
     path('gestores/excluir/<int:gestor_id>/', views.excluir_gestor, name='excluir_gestor'),
     path('painel/gestor/', views.painel_gestor, name='painel_gestor'),
+    path('gestores/<int:gestor_id>/editar/', views.editar_gestor, name='editar_gestor'),
+
 
 
 
