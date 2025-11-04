@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGE - Painel do Superusuário</title>
+    <link rel="stylesheet" href="superusuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+    <!--Div Global-->
+    <div class="container">
+
+        <!--Menu do Topo, Fixo-->
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>sige</h2>
+
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <!--Menu Lateral, Fixo-->
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+        
+        <!--Main conténdo todo conteúdo da Página-->
+        <main class="conteudo-principal-rolavel">
+            <div class="usuario">
+                <h1>Olá, Surperusuário</h1>
+            </div>
+            
+            <!--Cards-->
+            <div class="conteudo-geral">
+                <section class="cards">
+                    <div class="card">
+                        <p>Total de Turmas</p>
+                        <h2>5</h2>
+                    </div>
+                    <div class="card">
+                        <p>Total de alunos</p>
+                        <h2>142</h2>
+                    </div>
+                    <div class="card">
+                        <p>Total de professores</p>
+                        <h2>5</h2>
+                    </div>
+                    <div class="card">
+                        <p>Total de professores</p>
+                        <h2>5</h2>
+                    </div>
+                </section>
+
+                <!--Calendário-->
+                <div class="calendario-container">
+                    <div class="calendario">
+
+                        <div class="calendario-box">
+                            <div class="calendario-cabecalho">
+                                <h2>OUTUBRO</h2>
+                            </div>
+
+                            <div class="calendario-grade">
+                                <div class="nome-dia">DOM</div>
+                                <div class="nome-dia">SEG</div>
+                                <div class="nome-dia">TER</div>
+                                <div class="nome-dia">QUA</div>
+                                <div class="nome-dia">QUI</div>
+                                <div class="nome-dia">SEX</div>
+                                <div class="nome-dia">SAB</div>
+
+                                <div class="dia vazio"></div>
+                                <div class="dia vazio"></div>
+                                <div class="dia vazio"></div>
+
+                                <div class="dia">1</div>
+                                <div class="dia">2</div>
+                                <div class="dia">3</div>
+                                <div class="dia">4</div>
+
+                                <div class="dia">5</div>
+                                <div class="dia">6</div>
+                                <div class="dia">7</div>
+                                <div class="dia">8</div>
+                                <div class="dia">9</div>
+                                <div class="dia">10</div>
+                                <div class="dia">11</div>
+
+                                <div class="dia">12</div>
+                                <div class="dia">13</div>
+                                <div class="dia">14</div>
+                                <div class="dia">15</div>
+                                <div class="dia">16</div>
+                                <div class="dia">17</div>
+                                <div class="dia">18</div>
+
+                                <div class="dia">19</div>
+                                <div class="dia">20</div>
+                                <div class="dia">21</div>
+                                <div class="dia">22</div>
+                                <div class="dia">23</div>
+                                <div class="dia">24</div>
+                                <div class="dia">25</div>
+
+                                <div class="dia">26</div>
+                                <div class="dia atual">27</div>
+                                <div class="dia">28</div>
+                                <div class="dia">29</div>
+                                <div class="dia">30</div>
+                                <div class="dia">31</div>
+
+                                <div class="dia vazio"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!--Script para Função Hamburguer(responsividade)-->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+
+            toggleBtn.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+        });
+    </script>
+</body>
+
+</html>
