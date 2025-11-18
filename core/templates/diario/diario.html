@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Diário do Professor{% endblock %}
+
+<!-- Título -->
+{% block header_title %}Diário do Professor{% endblock %}
+
+<!--Em breve o css dessa página-->
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/cadastro_aluno.css' %}">
+{% endblock %}
+
+{% block user_info %}
+
+<a href="{% url 'disciplina' %}" title="Voltar"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}

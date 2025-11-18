@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Diário do Professor{% endblock %}
+
+<!-- Título -->
+{% block header_title %}Diário do Professor{% endblock %}
+
+<!--Em breve o css dessa página-->
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/cadastro_aluno.css' %}">
+{% endblock %}
+
+{% block user_info %}
+
+<a href="{% url 'turma' %}" title="Voltar"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
+{% endblock %}
+
+{% block content %}
+    <nav>
+
+        <!-- Título da Turma escolhida -->
+        <h1 class="topic">{{turma.nome}} - {{turma.ano}}</h1>
+
+        <!-- Botão de voltar -->
+        <a href="{% url 'turma' %}">
+            <img src="" alt="Voltar">
+        </a>
+        
+        <!--Botão do SuperUsuário-->
+        <p>
+            <a href="{% url 'disciplina_add1' %}">
+                <button>Adicionar Disciplina</button>
+            </a>
+        </p>
+
+        <!-- Diário -->
+        <div>
+            
+            <!-- Aba de Pesquisa -->
+            <div>
+                <form action="" method="get">
+                <p><input type="text" name="buscar" placeholder="Buscar"/></p>
+                <p><input type="submit" value="Pesquisar"/></p>
+            </form>
+            </div>
+
+            <!-- Tabela de Disciplinas no Diário -->
+            <div class="tabela">
+                <div>
+                    <p>Disciplina</p>
+                    <p>Alunos</p>
+                    <p>Professor</p>
+                    <p>Ações</p>
+                </div>
+                {% for disciplina in disciplinas %}
+                    <div>
+                        <p>{{disciplina.nome}}</p>
+                        <p>{{disciplina.qtd_alunos}}</p>
+                        <p>{{disciplina.professor}}</p>
+
+                        <!--Opção do SuperUsuário-->
+                        <a href="{}">
+                            <img src="" alt="Editar Disciplina">
+                        </a>
+
+                        <!--Volta pro Professor-->
+                        <a href="{% url 'diario' disciplina.id %}">
+                            <img src="" alt="Ver diário da disciplina">
+                        </a>
+
+                        <!--SuperUsuário de novo-->
+                        <a href="{}">
+                            <img src="" alt="Remover Disciplina">
+                        </a>
+
+                    </div>
+                {% empty %}
+                    <div>
+                        <p>Nenhuma disciplina adicionada.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+{% endblock %}

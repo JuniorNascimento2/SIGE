@@ -1,0 +1,84 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Diário do Professor{% endblock %}
+
+<!-- Título -->
+{% block header_title %}Diário do Professor{% endblock %}
+
+<!--Em breve o css dessa página-->
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/cadastro_aluno.css' %}">
+{% endblock %}
+
+
+{% block user_info %}
+<a href="{% url 'turma' %}" title="Voltar"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
+{% endblock %}
+
+{% block content %}
+
+<!--Tela de Adicionar Turma - Part1 :") "-->
+
+    <main>
+        
+        <!--Título-->
+        <h1>Adicionar Turma</h1>
+
+        <div>
+
+            <!--Etapas de Cadastro-->
+            <div>
+                <div>
+                    <p>1.Etapa</p>
+                </div>
+                <div>
+                    <p>2.Etapa</p>
+                </div>
+            </div>
+
+            <!--Cadastro-->
+            <div>
+                <form method="POST" action="{% url 'turma_add1' %}">
+                    {% csrf_token %}
+                    <p>
+                        <label>Nome:</label>
+                        <input type="text" name="nome" placeholder="Digite o nome da turma">
+                    </p>
+                    <p>
+                        <label>Ano:</label>
+                        <input type="number" min="2000" max="2100" name="ano" placeholder="Selecione o ano">
+                    </p>
+                    <p>
+                        <label>Nivel de Ensino:</label>
+                        <select name="nivel">
+                            <option disabled selected>Selecione o nível</option>
+                            <option>Ensino Fundamental I</option>
+                            <option>Ensino Fundamental II</option>
+                            <option>Ensino Médio</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label>Turno:</label>
+                            <label><input type="radio" name="turno" value="Manhã"> Manhã</label>
+                            <label><input type="radio" name="turno" value="Tarde"> Tarde</label>
+                            <label><input type="radio" name="turno" value="Noite"> Noite</label>
+                    </p>
+                    <p>
+                        <label>Série:</label>
+                        <input type="text" name="serie" placeholder=""/>
+                    </p>
+
+                    <!--Botões-->
+                    <p>
+                        <button type="submit">Próximo</button>
+                    </p>
+                    <p>
+                        <a href="{% url 'turma' %}">Voltar</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Diário do Professor{% endblock %}
+
+<!-- Título -->
+{% block header_title %}Diário do Professor{% endblock %}
+
+<!--Em breve o css dessa página-->
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/cadastro_aluno.css' %}">
+{% endblock %}
+
+{% block user_info %}
+
+<a href="{% url 'disciplina' %}" title="Voltar"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
+{% endblock %}
+
+{% block content %}
+
+    <main>
+        
+        <!--Título-->
+        <h1>Adicionar Turma</h1>
+
+        <div>
+
+            <!--Etapas de Cadastro-->
+            <div>
+                <div>
+                    <p>1.Etapa</p>
+                </div>
+                <div>
+                    <p>2.Etapa</p>
+                </div>
+            </div>
+
+            <!--Cadastro-->
+            <div>
+                <form method="POST" action="{% url 'disciplina_add2' %}">
+                    {% csrf_token %}
+                    <p>
+                        <label>Periodo:</label>
+                        <input type="text" name="periodo" placeholder="Selecione o periodo">
+                    </p>
+                    <p>
+                        <label>Status:</label>
+                        <select name="status">
+                            <option disabled selected>Selecione o estado da turma</option>
+                            <option>Concluída</option>
+                            <option>Em andamento</option>
+                            <option>Cancelada</option>
+                        </select>
+                    </p>
+
+                    <!--Parte para adicionar os dias e os horários-->
+                     <h2>Dias e horários da turma</h2>
+                    <div>
+                        <p>
+                            <label>Dia da semana:</label>
+                            <select name="dia_semana">
+                                <option disabled selected>Selecione o dia</option>
+                                <option value="segunda">Segunda-feira</option>
+                                <option value="terca">Terça-feira</option>
+                                <option value="quarta">Quarta-feira</option>
+                                <option value="quinta">Quinta-feira</option>
+                                <option value="sexta">Sexta-feira</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label>Horário de início:</label>
+                            <input type="time" name="hora_inicio">
+                        </p>
+                        <p>
+                            <label>Horário de término:</label>
+                            <input type="time" name="hora_fim">
+                        </p>
+
+                        <!--Botão de adicionar-->
+                        <p>
+                            <button type="button">Adicionar horário</button>
+                        </p>
+                    </div>
+
+                    <!--Aqui mostra os que ele adicionou-->
+                    <div>
+                        <h3>Horários adicionados</h3>
+                        {% for horario in horarios %}
+                            <p>{{ horario.dia }} - {{ horario.inicio }} às {{ horario.fim }}</p>
+                            <a href=""><img src="" alt="Excluir"></a>
+                            <a href=""><img src="" alt="Editar"></a>
+                        {% empty %}
+                            <p>Nenhum horário adicionado.</p>
+                        {% endfor %}
+                    </div>
+
+                    <!--Botões-->
+                    <p>
+                        <button type="submit">Próximo</button>
+                    </p>
+                    <p>
+                        <a href="{% url 'disciplina_add1' %}">Voltar</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %}

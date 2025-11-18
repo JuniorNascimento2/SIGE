@@ -1,0 +1,96 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Diário do Professor{% endblock %}
+
+<!-- Título -->
+{% block header_title %}Diário do Professor{% endblock %}
+
+<!--Em breve o css dessa página-->
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/cadastro_aluno.css' %}">
+{% endblock %}
+
+{% block user_info %}
+
+<!--Só dando uma idéia, não ficaria melhor esse "Olá, Fulano" aparecer só na primeira vez que ele acessar a página? Depois ficaria só a figura de perfil mesmo.-->
+
+<a href="{% url 'painel_super' %}" title="Voltar"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Tela de Diário do Professor -->
+    <nav>
+        <h2>Diário do Professor</h2>
+        <h1 style="color: red; font-style: oblique; background-color: white;">ATENÇÃO: Essa página ainda não está funcionando,<br>desde já agradeço a paciência dos queridos. Obrigada! :") </h1> <br>
+
+        <!--Botão do SuperUsuário-->
+        {% if request.user.is_superuser %}
+        <p>
+            <a href="{% url 'turma_add1' %}">Adicionar Turma</a>
+        </p>
+        {% endif %}
+
+        <!-- Diário -->
+        <div>
+
+            <!-- Aba de Pesquisa -->
+            <div>
+                <form action="" method="get">
+                    <p>
+                        <input type="text" name="buscar" placeholder="Buscar"/>
+                    </p>
+                    <p>
+                        <input type="submit" value="Pesquisar"/>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Tabela de Turmas no Diário -->
+            <div class="tabela">
+                <div>
+                    <p>Turmas</p>
+                    <p>Ano</p>
+                    <p>Início</p>
+                    <p>Fim</p>
+                    <p>Ações</p>
+                </div>
+                {% for turma in turmas %}
+                    <div>
+                        <p>{{turma.nome}}</p>
+                        <p>{{turma.ano}}</p>
+                        <p>{{turma.data_inicio}}</p>
+                        <p>{{turma.data_fim}}</p>
+
+                        <!--Opção do SuperUsuário-->
+                        {% if request.user.is_superuser %}
+                        <a href="">
+                            <img src="" alt="Editar Turma">
+                        </a>
+                        {% endif %}
+
+                        <!--Volta pro professor-->
+                        <a href="">
+                            <img src="{% url 'disciplina' %}" alt="Ver Turma">
+                        </a>
+
+                        <!--SuperUsuário novamente-->
+                        {% if request.user.is_superuser %}
+                        <a href="">
+                            <img src="" alt="Remover Turma">
+                        </a>
+                        {% endif %}
+
+                    </div>
+                {% empty %}
+                    <div>
+                        <p>Nenhuma turma adicionada.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+    </nav>
+{% endblock %}

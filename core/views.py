@@ -624,3 +624,22 @@ def painel_aluno(request):
         'disciplinas': disciplinas,
         'notas_dict': notas_dict,
     })
+
+#Diário
+def turma(request):
+    return render(request, 'diario/turma.html')
+
+def turma_add1(request):
+    return render(request, 'diario/turma_add1.html')
+
+def turma_add2(request):
+    return render(request, 'diario/turma_add2.html')
+
+def disciplina(request):
+    return render(request, 'diario/disciplina.html')
+
+def disciplina_add1(request):
+    return render(request, 'diario/disciplina_add1.html')
+
+def disciplina_add2(request):
+    return render(request, 'diario/disciplina_add2.html')

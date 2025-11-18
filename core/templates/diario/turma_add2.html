@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Diário do Professor{% endblock %}
+
+<!-- Título -->
+{% block header_title %}Diário do Professor{% endblock %}
+
+<!--Em breve o css dessa página-->
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/cadastro_aluno.css' %}">
+{% endblock %}
+
+
+{% block user_info %}
+<a href="{% url 'turma_add1' %}" title="Voltar"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
+{% endblock %}
+
+{% block content %}
+
+<!--Última Parte-->
+    <main>
+        
+        <!--Título-->
+        <h1>Adicionar Turma</h1>
+
+        <div>
+
+            <!--Etapas de Cadastro-->
+            <div>
+                <div>
+                    <img src="" alt="">
+                    <p>1.Etapa</p>
+                </div>
+                <div>
+                    <p>2.Etapa</p>
+                </div>
+            </div>
+
+            <!--Cadastro-->
+            <div>
+                <form method="POST" action="{% url 'turma_add2' %}">
+                    {% csrf_token %}
+                    <p>
+                        <label>Vagas:</label>
+                        <input type="number" name="qtd_alunos" placeholder="Selecione a quantidade de vagas">
+                    </p>
+                    <p>
+                        <label>Início:</label>
+                        <input type="date" name="inicio" placeholder="Selecione a data de início">
+                    </p>
+                    <p>
+                        <label>Fim:</label>
+                        <input type="date" name="fim" id="" placeholder="Selecione a data de fim">
+                    </p>
+                    <p>
+                        <label>Sala:</label>
+                        <input type="number" min="1" max="100" name="sala" placeholder="Selecione a sala"/>
+                    </p>
+                    <p>
+                        <label>Status:</label>
+                        <select name="status">
+                            <option disabled selected>Selecione o estado da turma</option>
+                            <option>Concluída</option>
+                            <option>Em andamento</option>
+                            <option>Cancelada</option>
+                        </select>
+                    </p>
+
+                    <!--Botões-->
+                    <p>
+                        <button type="submit">Adicionar</button>
+                    </p>
+                    <p>
+                        <a href="{% url 'turma_add1' %}">Voltar</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %}
