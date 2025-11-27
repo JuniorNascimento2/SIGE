@@ -210,3 +210,11 @@ class GestorForm(forms.ModelForm):
             gestor.save()
 
         return gestor
+    
+
+
+class DisciplinaForm(forms.ModelForm):
+    class Meta:
+        model = Disciplina
+        fields = ['nome', 'professor']
+

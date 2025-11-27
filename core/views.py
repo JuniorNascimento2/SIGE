@@ -391,47 +391,9 @@ def editar_perfil_aluno(request):
 
 
 #Disciplinas
-@login_required
-def listar_disciplinas(request):
-    query = request.GET.get('q', '')
-    if query:
-        turmas = Turma.objects.filter(nome__icontains=query).prefetch_related('disciplina_set__professor')
-    else:
-        turmas = Turma.objects.prefetch_related('disciplina_set__professor').all()
-
-    return render(request, 'core/listar_disciplinas.html', {
-        'turmas': turmas,
-        'query': query,
-    })
 
 
 
-@login_required
-def cadastrar_disciplina(request):
-    if not request.user.is_superuser:
-        return redirect('login')
-
-    erro = None
-    if request.method == 'POST':
-        nome = request.POST['nome']
-        professor_id = request.POST['professor']
-        turma_id = request.POST['turma']
-
-        if Disciplina.objects.filter(nome=nome, professor_id=professor_id, turma_id=turma_id).exists():
-            erro = 'Essa disciplina já existe para este professor nessa turma.'
-        else:
-            professor = get_object_or_404(Professor, id=professor_id)
-            turma = get_object_or_404(Turma, id=turma_id)
-            Disciplina.objects.create(nome=nome, professor=professor, turma=turma)
-            return redirect('listar_disciplinas')
-
-    professores = Professor.objects.all()
-    turmas = Turma.objects.all()
-    return render(request, 'core/cadastrar_disciplina.html', {
-        'professores': professores,
-        'turmas': turmas,
-        'erro': erro
-    })
 
 
 
@@ -445,16 +407,16 @@ def editar_disciplina(request, disciplina_id):
     if request.method == 'POST':
         disciplina.nome = request.POST['nome']
         disciplina.professor = get_object_or_404(Professor, id=request.POST['professor'])
-        disciplina.turma = get_object_or_404(Turma, id=request.POST['turma'])
         disciplina.save()
-        return redirect('listar_disciplinas')
+
+        # redireciona direto para as disciplinas dessa turma
+        return redirect('listar_disciplinas_turma', turma_id=disciplina.turma.id)
 
     professores = Professor.objects.all()
-    turmas = Turma.objects.all()
+
     return render(request, 'core/editar_disciplina.html', {
         'disciplina': disciplina,
         'professores': professores,
-        'turmas': turmas
     })
 
 
@@ -463,12 +425,14 @@ def editar_disciplina(request, disciplina_id):
 
 @login_required
 def excluir_disciplina(request, disciplina_id):
-    if not request.user.is_superuser:
-        return redirect('login')
-
     disciplina = get_object_or_404(Disciplina, id=disciplina_id)
+    turma_id = disciplina.turma.id  # salva antes de deletar
+
     disciplina.delete()
-    return redirect('listar_disciplinas')
+    messages.success(request, "Disciplina excluída com sucesso!")
+
+    # 🔥 volta para a listagem de disciplinas da turma
+    return redirect("listar_disciplinas_turma", turma_id=turma_id)
 
 #Turma
 
@@ -623,4 +587,59 @@ def painel_aluno(request):
         'aluno': aluno,
         'disciplinas': disciplinas,
         'notas_dict': notas_dict,
+    })
+
+
+@login_required
+def cadastrar_disciplina_para_turma(request, turma_id):
+    if not request.user.is_superuser:
+        return redirect('login')
+
+    turma = get_object_or_404(Turma, id=turma_id)
+
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        professor_id = request.POST.get('professor')
+
+        if not nome or not professor_id:
+            messages.error(request, "Preencha todos os campos.")
+        else:
+            professor = get_object_or_404(Professor, id=professor_id)
+
+            if Disciplina.objects.filter(nome=nome, turma=turma).exists():
+                messages.error(request, "Essa disciplina já existe nesta turma.")
+            else:
+                Disciplina.objects.create(
+                    nome=nome,
+                    professor=professor,
+                    turma=turma
+                )
+                messages.success(request, "Disciplina cadastrada com sucesso!")
+
+                # 🔥 REDIRECIONA PARA A LISTA DE DISCIPLINAS DA TURMA
+                return redirect('listar_disciplinas_turma', turma_id=turma.id)
+
+    professores = Professor.objects.all()
+
+    return render(request, 'core/cadastrar_disciplina_turma.html', {
+        'turma': turma,
+        'professores': professores
+    })
+
+
+
+@login_required
+def listar_disciplinas_turma(request, turma_id):
+    turma = get_object_or_404(Turma, id=turma_id)
+
+    query = request.GET.get("q", "")
+    disciplinas = Disciplina.objects.filter(turma=turma)
+
+    if query:
+        disciplinas = disciplinas.filter(nome__icontains=query)
+
+    return render(request, "core/listar_disciplinas_turma.html", {
+        "turma": turma,
+        "disciplinas": disciplinas,
+        "query": query
     })

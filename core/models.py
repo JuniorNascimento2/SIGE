@@ -29,9 +29,10 @@ class Disciplina(models.Model):
     nome = models.CharField(max_length=100)
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
-
+    
     def __str__(self):
         return f"{self.nome} ({self.turma})"
+
 
 class Nota(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
