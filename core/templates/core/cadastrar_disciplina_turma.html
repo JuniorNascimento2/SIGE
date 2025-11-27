@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Cadastrar Disciplina para {{ turma.nome }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Nome da Disciplina</label>
+    <input type="text" name="nome" required>
+
+    <label>Professor Responsável</label>
+    <select name="professor" required>
+        {% for prof in professores %}
+            <option value="{{ prof.id }}">{{ prof.nome_completo }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>
+{% endblock %}

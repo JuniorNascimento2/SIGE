@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Disciplinas da Turma {{ turma.nome }}{% endblock %}
+{% block header_title %}Disciplinas da Turma: {{ turma.nome }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/lista_discentes.css' %}">
+{% endblock %}
+
+{% block user_info %}
+  <span>Olá, {{ request.user.first_name }}</span>
+  <a href="{% url 'painel_super' %}"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'logout' %}"><i class="fas fa-power-off"></i></a>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Topo -->
+  <div class="top-controls">
+    
+    <!-- botão adicionar disciplina -->
+    <a href="{% url 'cadastrar_disciplina_turma' turma.id %}">
+      <button class="cadastrar-btn">
+        <i class="fas fa-plus"></i> Adicionar Disciplina
+      </button>
+    </a>
+
+    <!-- busca -->
+    <form class="buscar-form-container" method="get">
+      <input type="text" class="buscar-input" name="q" placeholder="Buscar disciplina..." value="{{ query }}">
+      <button type="submit" class="buscar-btn"><i class="fas fa-search"></i></button>
+    </form>
+
+    <!-- voltar -->
+    <a href="{% url 'listar_turmas' %}">
+      <button class="cadastrar-btn" style="background:#555">
+        <i class="fas fa-arrow-left"></i> Voltar p/ Turmas
+      </button>
+    </a>
+
+  </div>
+
+  <!-- Tabela -->
+  <div class="content-box">
+    <h2 class="titulo">DISCIPLINAS DA TURMA {{ turma.nome }}</h2>
+
+    <table class="tabela-discentes">
+      <thead>
+        <tr class="tabela-principal">
+          <th class="tabela-cabecalho">Disciplina</th>
+          <th class="tabela-cabecalho">Professor</th>
+          <th class="tabela-cabecalho">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for disciplina in disciplinas %}
+        <tr class="linhas-tabela">
+          <td class="tabela-info">{{ disciplina.nome }}</td>
+          <td class="tabela-info">{{ disciplina.professor.nome_completo }}</td>
+
+          <td class="tabela-icones">
+
+            <a href="{% url 'editar_disciplina' disciplina.id %}" class="action-btn editar" title="Editar">
+              <i class="fas fa-pen-to-square"></i>
+            </a>
+
+            <a href="{% url 'excluir_disciplina' disciplina.id %}" class="action-btn deletar" title="Excluir"
+               onclick="return confirm('Deseja realmente excluir esta disciplina?');">
+              <i class="fas fa-trash-can"></i>
+            </a>
+
+          </td>
+        </tr>
+        {% empty %}
+        <tr class="linhas-tabela">
+          <td colspan="3" class="tabela-info">Nenhuma disciplina cadastrada.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
+{% endblock %}

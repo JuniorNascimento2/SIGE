@@ -52,12 +52,25 @@
           <tr class="linhas-tabela">
             <td class="tabela-info">{{ turma.nome }}</td>
             <td class="tabela-icones">
+
+              <!-- EDITAR -->
               <a href="{% url 'editar_turma' turma.id %}" class="action-btn editar" title="Editar">
                 <i class="fas fa-pen-to-square"></i>
               </a>
+
+              <!-- EXCLUIR -->
               <a href="{% url 'excluir_turma' turma.id %}" class="action-btn deletar" title="Excluir" onclick="return confirm('Deseja excluir esta turma?')">
                 <i class="fas fa-trash-can"></i>
               </a>
+
+              <!-- ADICIONAR DISCIPLINA (NOVO) -->
+              <a href="{% url 'listar_disciplinas_turma' turma.id %}"
+                class="action-btn adicionar"
+                title="Ver Disciplinas da Turma">
+                  <i class="fas fa-book-medical"></i>
+              </a>
+
+
             </td>
           </tr>
         {% empty %}
