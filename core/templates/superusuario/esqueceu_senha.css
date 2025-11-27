@@ -1,0 +1,359 @@
+/* Configuração Geral da Página */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+body {
+    background-color: #f6f7fb;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Menu Topo, Fixo */
+.menu-principal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #0d1b2a;
+    height: 60px;
+    color: #fff;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #f6f7fb;
+}
+
+.menu-principal .logo-menu {
+    height: 70px;
+    width: auto;
+}
+
+.menu-principal h2 {
+    margin: 0;
+    font-size: 20pt;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+}
+
+.menu-principal .menu-icon-start {
+    margin-right: 10px;
+    background: #a2a5aa;
+    padding: 8px;
+    border-radius: 100px;
+}
+
+.menu-principal .icone-menu {
+    font-size: 20pt;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.menu-principal .icone-menu:hover {
+    transform: scale(1.1);
+    color: #2a5cac;
+}
+
+/* Hamburguer para responsividade */
+.hamburguer {
+    display: none !important;
+}
+
+/* Icones user e sair */
+.menu-icones {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Menu Lateral, Fixo */
+.menu-lateral {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    z-index: 900;
+    background: #0d1b2a;
+    color: #fff;
+    width: 220px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.nav-lateral {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.nav-lateral a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ddd;
+    text-decoration: none;
+    padding: 18px 15px;
+    border-radius: 8px;
+    transition: background 0.3s;
+    font-size: 15pt;
+    margin-bottom: 15px;
+}
+
+.nav-lateral a:hover,
+.nav-lateral a.ativo-menu {
+    background: #1b263b;
+}
+
+/* Conteúdo rolável da página */
+main {
+    margin-left: 220px;
+    margin-top: 60px;
+    padding: 20px;
+    width: auto;
+    min-height: calc(100vh - 60px);
+}
+
+.conteudo-principal-rolavel {
+    background: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 20px auto;
+    padding-top: 50px;
+    margin-top: 30px;
+    padding-bottom: 30px;
+}
+
+.topo-formulario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    padding-top: 30px;
+}
+
+.topo-formulario h1 {
+    font-weight: normal;
+    font-size: 25pt;
+    color: #0d1b2a;
+    margin: 0;
+    text-align: center;
+    letter-spacing: 0.1rem;
+    text-transform: capitalize;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 10px;
+}
+
+/* Estilo para a Caixa de Texto  */
+.caixa-texto {
+    display: flex;
+    align-items: center;
+    gap: 100px; 
+    margin-bottom: 10px;
+}
+
+.caixa-texto label {
+    font-size: 14pt;
+    color: #333;
+    width: 120px;
+    min-width: 120px; 
+    text-align: left;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.caixa-texto input[type="email"]{
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #868686;
+    transition: border-color 0.3s;
+}
+
+.caixa-texto select:focus,
+.caixa-texto input:focus,
+.caixa-texto textarea:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+
+/* Botão Recuperar Senha */
+.botoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+
+/* Estilo para o botão */
+.btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    /* Garante alinhamento à direita no fluxo com botão Anterior */
+    margin-left: auto;
+    order: 2;
+}
+
+.btn:hover {
+    background-color: #357ab8;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .menu-lateral {
+        width: 180px;
+    }
+
+    main {
+        margin-left: 180px;
+    }
+
+    .conteudo-principal-rolavel {
+        padding: 25px;
+    }
+}
+
+/* Responsividade para Celular */
+@media (max-width: 768px) {
+    .menu-principal h2 {
+        font-size: 1.2rem;
+    }
+
+    .menu-principal .logo-menu {
+        height: 50px;
+    }
+
+    /* Mostra o hambúrguer no mobile */
+    .hamburguer {
+        display: block !important;
+        margin-left: auto;
+        order: 1;
+    }
+
+    /* Ajuste de posição dos ícones de perfil/sair no mobile */
+    .menu-icones {
+        margin-left: 15px;
+        order: 2;
+    }
+
+    /* Menu lateral recolhível (Escondido por padrão no mobile) */
+    .menu-lateral {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        width: 200px;
+        height: calc(100% - 60px);
+        transition: left 0.3s ease;
+        z-index: 999;
+        padding-top: 20px;
+    }
+
+    /* Quando a classe 'ativo' é adicionada via JavaScript */
+    .menu-lateral.ativo {
+        left: 0;
+    }
+
+    /* O conteúdo principal deve começar do topo da tela no mobile */
+    main {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .conteudo-principal-rolavel {
+        margin-top: 15px;
+        padding: 20px;
+    }
+
+    .caixa-texto {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .caixa-texto label {
+        width: 100%;
+        min-width: 100%;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .botoes {
+        justify-content: space-between;
+        padding-right: 0; /* Inverte a ordem para Próximo/Salvar ficar em cima do Anterior em mobile */
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .botoes .btn{
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+    .botoes .btn {
+        order: 1;
+    }
+
+}
+
+/* Celulares Pequenos */
+@media (max-width: 480px) {
+    .menu-principal {
+        padding: 0 10px;
+    }
+
+    .menu-principal h2 {
+        font-size: 1rem;
+    }
+
+    .icone-menu {
+        font-size: 16pt;
+    }
+
+    .topo-formulario h1 {
+        font-size: 18pt;
+    }
+}
+
+/* * FIX: Sobrescreve a cor de fundo azul/amarela aplicada automaticamente
+ * pelo navegador em campos que usam o recurso de Preenchimento Automático (Autofill).
+ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+    box-shadow: 0 0 0px 1000px #fff inset;
+    -webkit-text-fill-color: #333;
+    transition: background-color 5000s ease-in-out 0s;
+}
