@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGE - Cadastrar Docentes</title>
+    <link rel="stylesheet" href="cadastrar_docente.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>aura</h2>
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+
+        <main>
+            <div class="topo-formulario">
+                <h1>cadastrar docentes</h1>
+            </div>
+
+            <div class="conteudo-principal-rolavel">
+
+                <div class="passos-indicadores">
+                    <span class="passo completo"><i class="fa-solid fa-check"></i> 1. Dados Pessoais</span>
+                    <span class="passo ativo">2. Endereço</span>
+                    <span class="passo inativo">3. Alocação</span> </div>
+
+                <form class="formulario" action="alocacao_docente.html" method="GET">
+
+                    <div class="caixa-texto">
+                        <label for="cep">CEP</label>
+                        <input type="text" name="cep" placeholder="00000-000">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="estado">Estado</label>
+
+                        <select name="estado" id="estado">
+                            <option value="" disabled selected>Selecione o Estado (UF)</option>
+                            <option value="AC">AC</option>
+                            <option value="AL">AL</option>
+                            <option value="AP">AP</option>
+                            <option value="AM">AM</option>
+                            <option value="BA">BA</option>
+                            <option value="CE">CE</option>
+                            <option value="DF">DF</option>
+                            <option value="ES">ES</option>
+                            <option value="GO">GO</option>
+                            <option value="MA">MA</option>
+                            <option value="MT">MT</option>
+                            <option value="MS">MS</option>
+                            <option value="MG">MG</option>
+                            <option value="PA">PA</option>
+                            <option value="PB">PB</option>
+                            <option value="PR">PR</option>
+                            <option value="PE">PE</option>
+                            <option value="PI">PI</option>
+                            <option value="RJ">RJ</option>
+                            <option value="RN">RN</option>
+                            <option value="RS">RS</option>
+                            <option value="RO">RO</option>
+                            <option value="RR">RR</option>
+                            <option value="SC">SC</option>
+                            <option value="SP">SP</option>
+                            <option value="SE">SE</option>
+                            <option value="TO">TO</option>
+                        </select>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="municipio">Município</label>
+                        <input type="text" name="municipio" placeholder="Digite o Município">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" name="bairro" placeholder="Digite o Bairro">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="logradouro">Logradouro</label>
+                        <input type="text" name="logradouro" placeholder="Rua, Av., etc.">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="numero">Número</label>
+                        <input type="text" name="numero" placeholder="Nº da casa">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="complemento">Complemento</label>
+                        <input type="text" name="complemento" placeholder="Apto, Bloco, etc. (Opcional)">
+                    </div>
+
+                    <div class="botoes">
+                        <a href="cadastrar_docente.html" class="btn-voltar-tab">Anterior</a>
+                        <button type="submit" class="btn">Próximo</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+
+            toggleBtn.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+        });
+    </script>
+</body>
+
+</html>

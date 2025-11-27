@@ -12,7 +12,9 @@ body {
     overflow-x: hidden;
 }
 
-/*Menu Topo, Fixo*/
+/* 1. LAYOUT PRINCIPAL E MENU TOPO */
+/* ---------------------------------- */
+
 .menu-principal {
     position: fixed;
     top: 0;
@@ -72,7 +74,8 @@ body {
     gap: 15px;
 }
 
-/*Menu Lateral, Fixo*/
+/* 2. MENU LATERAL */
+
 .menu-lateral {
     position: fixed;
     top: 60px;
@@ -107,11 +110,12 @@ body {
     margin-bottom: 15px;
 }
 
-.nav-lateral a:hover {
+.nav-lateral a:hover,
+.nav-lateral a.ativo-menu {
     background: #1b263b;
 }
 
-/* Conteúdo Rolável da Página */
+/* 3. ÁREA PRINCIPAL E FORMULÁRIO */
 main {
     margin-left: 220px;
     margin-top: 60px;
@@ -121,7 +125,7 @@ main {
 }
 
 .conteudo-principal-rolavel {
-   background: #fff;
+    background: #fff;
     padding: 30px;
     border-radius: 5px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -137,8 +141,7 @@ main {
     align-items: center;
     justify-content: center;
     margin-bottom: 25px;
-    margin-top: 30px;
-    padding-top: 0;
+    padding-top: 30px;
 }
 
 .topo-formulario h1 {
@@ -162,16 +165,18 @@ main {
 .caixa-texto {
     display: flex;
     align-items: center;
-    gap: 100px;
+    /* Ajustado o gap para funcionar nas páginas de dados pessoais e endereço/alocação */
+    gap: 100px; 
     margin-bottom: 10px;
 }
 
 .caixa-texto label {
     font-size: 14pt;
     color: #333;
+    /* Definindo uma largura consistente para os labels */
     width: 120px;
-    min-width: 120px;
-    text-align: justify;
+    min-width: 120px; 
+    text-align: left;
     margin: 0;
     white-space: nowrap;
 }
@@ -211,7 +216,7 @@ main {
     box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
 }
 
-/* --- Estilos para o campo Radio Button (Aluno com NE) --- */
+/* --- Estilos para o campo Radio Button (Aluno com NE - Mantido do discente) --- */
 #necessidade-especial-container {
     display: flex;
     align-items: center;
@@ -293,6 +298,7 @@ main {
     display: flex;
     gap: 10px;
     margin-top: 20px;
+    /* Alinha o botão "Voltar/Anterior" à esquerda e "Próximo/Salvar" à direita */
     justify-content: space-between;
 }
 
@@ -306,6 +312,7 @@ main {
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s;
+    /* Garante alinhamento à direita no fluxo com botão Anterior */
     margin-left: auto;
     order: 2;
 }
@@ -350,7 +357,10 @@ main {
     background-color: #d0d0d0;
 }
 
-/*Responsividade*/
+
+/* 4. RESPONSIVIDADE */
+/* ---------------------------------- */
+
 @media (max-width: 1024px) {
     .menu-lateral {
         width: 180px;
@@ -358,6 +368,10 @@ main {
 
     main {
         margin-left: 180px;
+    }
+
+    .conteudo-principal-rolavel {
+        padding: 25px;
     }
 }
 
@@ -367,30 +381,49 @@ main {
         font-size: 1.2rem;
     }
 
+    .menu-principal .logo-menu {
+        height: 50px;
+    }
+
+    /* Mostra o hambúrguer no mobile */
     .hamburguer {
         display: block !important;
         margin-left: auto;
+        order: 1;
     }
 
+    /* Ajuste de posição dos ícones de perfil/sair no mobile */
+    .menu-icones {
+        margin-left: 15px;
+        order: 2;
+    }
+
+    /* Menu lateral recolhível (Escondido por padrão no mobile) */
     .menu-lateral {
+        position: fixed;
+        top: 60px;
         left: -100%;
         width: 200px;
         height: calc(100% - 60px);
+        transition: left 0.3s ease;
+        z-index: 999;
+        padding-top: 20px;
     }
 
+    /* Quando a classe 'ativo' é adicionada via JavaScript */
     .menu-lateral.ativo {
         left: 0;
     }
 
+    /* O conteúdo principal deve começar do topo da tela no mobile */
     main {
         margin-left: 0;
         padding: 15px;
     }
 
     .conteudo-principal-rolavel {
-        margin: 15px auto;
+        margin-top: 15px;
         padding: 20px;
-        max-width: 100%;
     }
 
     .caixa-texto {

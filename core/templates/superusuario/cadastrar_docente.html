@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGE - Cadastrar Discentes</title>
-    <link rel="stylesheet" href="cadastrar_discente.css">
+    <title>SIGE - Cadastrar Docentes</title>
+    <link rel="stylesheet" href="cadastrar_docente.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -38,7 +38,7 @@
         <!--Main conténdo todo conteúdo da Página-->
         <main>
             <div class="topo-formulario">
-                <h1>cadastrar discentes</h1>
+                <h1>cadastrar docentes</h1>
             </div>
 
             <div class="conteudo-principal-rolavel">
@@ -48,7 +48,7 @@
                     <span class="passo inativo">2. Endereço</span>
                     <span class="passo inativo">3. Alocação</span> </div>
 
-                <form class="formulario" action="endereco_discente.html" method="GET">
+                <form class="formulario" action="endereco_docente.html" method="GET">
 
                     <div class="caixa-texto">
                         <label for="nome">Nome</label>
@@ -93,7 +93,7 @@
                         <input type="text" name="nome_mae" placeholder="Nome completo da mãe">
                     </div>
 
-                    <div class="caixa-texto" id="necessidade-especial-container">
+                    <!--<div class="caixa-texto" id="necessidade-especial-container">
                         <label>Aluno com NE</label>
                         <div class="radio-opcoes-simples">
                             <input type="radio" id="ne_sim" name="necessidades_especiais" value="sim">
@@ -102,7 +102,7 @@
                             <input type="radio" id="ne_nao" name="necessidades_especiais" value="nao" checked>
                             <label for="ne_nao">Não</label>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="caixa-texto" id="descricao-ne-container" style="display: none;">
                         <label for="descricao_ne">Descrição</label>
@@ -160,17 +160,19 @@
 
             // Lógica para mostrar/esconder o campo de descrição da NE
             function toggleDescricaoNE() {
-                if (neSim.checked) {
+                if (neSim && neSim.checked) {
                     descricaoNeContainer.style.display = 'flex';
                     descricaoNeInput.setAttribute('required', '');
-                } else {
+                } else if (descricaoNeContainer) {
                     descricaoNeContainer.style.display = 'none';
                     descricaoNeInput.removeAttribute('required');
                     descricaoNeInput.value = '';
                 }
             }
-            neSim.addEventListener('change', toggleDescricaoNE);
-            neNao.addEventListener('change', toggleDescricaoNE);
+            if (neSim && neNao) {
+                neSim.addEventListener('change', toggleDescricaoNE);
+                neNao.addEventListener('change', toggleDescricaoNE);
+            }
             toggleDescricaoNE();
         });
     </script>
