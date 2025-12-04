@@ -2,49 +2,122 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% block title %}Meu Sistema{% endblock %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- CSS global -->
-  <link rel="stylesheet" href="{% static 'core/css/global.css' %}" />
+  <title>{% block title %}SIGE{% endblock %}</title>
 
-  <!-- CSS extra da página -->
+  <!-- CSS principal do novo layout -->
+  <link rel="stylesheet" href="{% static 'core/css/padrao_novo.css' %}">
+
+  <!-- Ícones -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
   {% block extra_css %}{% endblock %}
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 </head>
+
 <body>
 
-  <!-- Cabeçalho fixo -->
-  <header class="header">
-    <div class="logo-titulo">
-      <img src="{% static 'core/img/Logo-menu.png' %}" alt="Logo do sistema" />
-      <h1>{% block header_title %}{% endblock %}</h1>
-    </div>
-    <div class="user-info">
-      {% block user_info %}
-      <!-- Pode ser sobrescrito -->
-      <span>Olá, Usuário!</span>
-      {% endblock %}
-    </div>
+  <!-- 🌟 MENU SUPERIOR FIXO -->
+  <header class="menu-principal">
+
+      <img src="{% static 'core/img/Logo-menu.png' %}" class="logo-menu">
+
+      <h2>SIGE</h2>
+
+      <!-- Botão Hamburguer (mobile) -->
+      <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+
+      <!-- Avatar + Menu -->
+      <div class="menu-icones">
+
+        <div class="user-dropdown">
+
+          <!-- Avatar cinza -->
+          <div class="user-avatar" id="user-avatar">
+              <i class="fa-solid fa-user"></i>
+          </div>
+
+          <!-- MENU SUSPENSO -->
+          <div class="dropdown-menu" id="dropdown-menu">
+              <a href="{% url 'editar_perfil_super' %}">
+                  <i class="fa-solid fa-user-pen"></i> Editar Perfil
+              </a>
+
+              <a href="{% url 'logout' %}">
+                  <i class="fa-solid fa-right-from-bracket"></i> Sair
+              </a>
+          </div>
+
+        </div>
+
+      </div>
+
   </header>
 
-  <div class="linha-abaixo-header"></div>
 
-  <!-- Conteúdo principal da página -->
-  <main>
-    {% block content %}{% endblock %}
+  <!-- 🌟 MENU LATERAL FIXO -->
+  <aside class="menu-lateral" id="menu-lateral">
+      <nav class="nav-lateral">
+
+          <a href="{% url 'painel_super' %}">
+              <i class="fa-solid fa-house"></i> Início
+          </a>
+
+          <a href="{% url 'listar_turmas' %}">
+              <i class="fa-solid fa-graduation-cap"></i> Turmas
+          </a>
+
+          <a href="{% url 'listar_professores' %}">
+              <i class="fa-solid fa-users"></i> Usuários
+          </a>
+
+          <a href="#">
+              <i class="fa-solid fa-book-open"></i> Disciplinas
+          </a>
+
+      </nav>
+  </aside>
+
+
+  <!-- 🌟 ÁREA DE CONTEÚDO -->
+  <main class="area-conteudo">
+      {% block content %}
+      {% endblock %}
   </main>
 
-  <div class="linha-acima-rodape"></div>
 
-  <!-- Rodapé fixo -->
-  <footer class="rodape">
-    <img src="{% static 'core/img/Logo-rodape.png' %}" alt="Logo rodapé" />
-  </footer>
+  <!-- SCRIPT DO MENU MOBILE + DROPDOWN DO USUÁRIO -->
+  <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          
+          /* MENU MOBILE */
+          const toggleBtn = document.getElementById("menu-toggle");
+          const menuLateral = document.getElementById("menu-lateral");
 
+          toggleBtn.addEventListener("click", () => {
+              menuLateral.classList.toggle("ativo");
+          });
+
+          /* DROPDOWN DO AVATAR */
+          const avatar = document.getElementById("user-avatar");
+          const menu = document.getElementById("dropdown-menu");
+
+          avatar.addEventListener("click", () => {
+              menu.style.display = menu.style.display === "block" ? "none" : "block";
+          });
+
+          // Fechar menu ao clicar fora
+          document.addEventListener("click", function(e) {
+              if (!avatar.contains(e.target) && !menu.contains(e.target)) {
+                  menu.style.display = "none";
+              }
+          });
+
+      });
+  </script>
+
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

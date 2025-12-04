@@ -198,3 +198,9 @@ main {
         font-size: 16pt;
     }
 }
+
+.area-conteudo {
+    margin-left: 220px;
+    margin-top: 60px;
+    padding: 20px;
+}
