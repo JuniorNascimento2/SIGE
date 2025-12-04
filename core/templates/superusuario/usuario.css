@@ -1,0 +1,249 @@
+/* Configuração Geral da Página */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", Arial, sans-serif;
+}
+
+body {
+    background: #f6f7fb;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Menu do Topo, Fixo */
+.menu-principal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #0d1b2a;
+    height: 60px;
+    color: #fff;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #f6f7fb;
+}
+
+.menu-principal .logo-menu {
+    height: 70px;
+    width: auto;
+}
+
+.menu-principal h2 {
+    margin: 0;
+    font-size: 20pt;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+}
+
+.menu-principal .menu-icon-start {
+    margin-right: 10px;
+    background: #a2a5aa;
+    padding: 8px;
+    border-radius: 100px;
+}
+
+.menu-principal .icone-menu {
+    font-size: 20pt;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.menu-principal .icone-menu:hover {
+    transform: scale(1.1);
+    color: #2a5cac;
+}
+
+/* Hamburguer para responsividade */
+.hamburguer {
+    display: none !important; /* Usando !important para forçar a regra no desktop */
+}
+
+/* Icones user e sair */
+.menu-icones {
+    margin-left: auto; 
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Menu Lateral, Fixo */
+.menu-lateral {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    z-index: 900;
+    background: #0d1b2a;
+    color: #fff;
+    width: 220px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.nav-lateral {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.nav-lateral a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ddd;
+    text-decoration: none;
+    padding: 18px 15px;
+    border-radius: 8px;
+    transition: background 0.3s;
+    font-size: 15pt;
+    margin-bottom: 15px;
+}
+
+.nav-lateral a:hover {
+    background: #1b263b;
+}
+
+/* Conteúdo Rolável da Página */
+main {
+    margin-left: 220px;
+    margin-top: 60px; 
+    padding: 20px;
+}
+
+.titulo-painel {
+    font-size: 2.8rem;
+    color: #1b263b;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: normal;
+    margin-top: 80px;
+    letter-spacing: 0.1em;
+}
+
+/* Cards */
+.cards-total {
+    display: flex;
+    gap: 30px; 
+    justify-content: center;
+    flex-wrap: wrap; 
+    padding: 20px 0;
+    margin-top: 80px;
+}
+
+/* Cards individuais */
+.card-usuario {
+    background-color: #f6f7fb; 
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 400px; 
+    height: 200px;
+    transition: transform 0.2s ease-in-out, background-color 0.2s;
+    cursor: pointer;
+}
+
+.card-usuario:hover {
+    transform: translateY(-5px); 
+    background-color: #e0e2e6; 
+}
+
+.card-usuario .icon {
+    font-size: 4.5em; 
+    color: #0d1b2a; 
+    margin-bottom: 15px;
+}
+
+.card-usuario .label {
+    font-size: 1.2em;
+    color: #333;
+    font-weight: normal;
+}
+
+/* Responsividade para Tablets e Telas Médias */
+@media (max-width: 1024px) {
+    .menu-lateral {
+        width: 180px;
+    }
+
+    main {
+        margin-left: 180px;
+    }
+}
+
+/* Responsividade para Celular*/
+@media (max-width: 768px) {
+    .menu-principal h2 {
+        font-size: 1.2rem;
+    }
+
+    .hamburguer {
+        display: block !important; 
+        margin-left: auto; 
+    }
+
+    .menu-icones {
+        margin-left: 15px;
+    }
+
+    /* Menu Lateral Recolhível */
+    .menu-lateral {
+        left: -100%; 
+        width: 200px;
+        height: calc(100% - 60px);
+    }
+
+    .menu-lateral.ativo {
+        left: 0; 
+    }
+
+    main {
+        margin-left: 0;
+        padding: 15px;
+    }
+    
+    /* Cards de Usuários em Mobile */
+    .cards-total {
+        flex-direction: column; 
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .card-usuario {
+        width: 90%; 
+        max-width: 250px;
+        height: auto; 
+    }
+    
+    .card-usuario .icon {
+        font-size: 3em;
+    }
+
+    .titulo-painel {
+        font-size: 1.8em;
+    }
+}
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+    .menu-principal {
+        padding: 0 10px;
+    }
+
+    .menu-principal h2 {
+        font-size: 1rem;
+    }
+}

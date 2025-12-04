@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGE - Cadastrar Docentes</title>
+    <link rel="stylesheet" href="cadastrar_docente.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!--Div Global-->
+    <div class="container">
+
+        <!--Menu Topo, Fixo-->
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>aura</h2>
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <!--Menu Lateral, Fixo-->
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+
+        <!--Main conténdo todo conteúdo da Página-->
+        <main>
+            <div class="topo-formulario">
+                <h1>cadastrar docentes</h1>
+            </div>
+
+            <div class="conteudo-principal-rolavel">
+
+                <div class="passos-indicadores">
+                    <span class="passo completo"><i class="fa-solid fa-check"></i> 1. Dados Pessoais</span>
+                    <span class="passo completo"><i class="fa-solid fa-check"></i> 2. Endereço</span>
+                    <span class="passo ativo">3. Alocação</span>
+                </div>
+
+                <form class="formulario" action="/api/cadastrar" method="POST">
+
+                    <div class="caixa-texto">
+                        <label for="matricula">Matrícula</label>
+                        <input type="text" name="matricula" placeholder="247569">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="formacao">Formação</label>
+                        <input type="text" name="formacao" placeholder="Digite sua área de formação">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="especializacao">Especialização</label>
+                        <input type="text" name="especializacao" placeholder="Digite sua área de especialização">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="area-atuacao">Área de Atuação</label>
+                        <input type="text" name="area-atuacao" placeholder="Digite sua área de atuação">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="senha">Senha</label>
+                        <input type="password" name="senha" placeholder="Digite uma senha segura">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="confirmar_senha">Confirmar</label>
+                        <input type="password" name="confirmar_senha" placeholder="Confirme a senha">
+                    </div>
+
+                    <div class="botoes">
+                        <a href="endereco_docente.html" class="btn-voltar-tab">Anterior</a>
+                        <button type="submit" class="btn">Salvar Cadastro</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!--Script para Função Hamburguer(responsividade)-->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+
+            toggleBtn.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+        });
+    </script>
+</body>
+
+</html>

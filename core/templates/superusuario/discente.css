@@ -1,0 +1,391 @@
+/* Configuração Geral da Página */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", Arial, sans-serif;
+}
+
+body {
+    background: #f6f7fb;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Menu do Topo, Fixo */
+.menu-principal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #0d1b2a;
+    height: 60px;
+    color: #fff;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #f6f7fb;
+}
+
+.menu-principal .logo-menu {
+    height: 70px; 
+    width: auto;
+}
+
+.menu-principal h2 {
+    margin: 0;
+    font-size: 20pt;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+}
+
+.menu-principal .menu-icon-start {
+    margin-right: 10px;
+    background: #a2a5aa;
+    padding: 8px;
+    border-radius: 100px;
+}
+
+.menu-principal .icone-menu {
+    font-size: 20pt;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.menu-principal .icone-menu:hover {
+    transform: scale(1.1);
+    color: #2a5cac;
+}
+
+/* Hamburguer para responsividade */
+.hamburguer {
+    display: none !important; /* Usando !important para forçar a regra no desktop */
+}
+
+/* Icones user e sair */
+.menu-icones {
+    margin-left: auto; 
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Menu Lateral, Fixo */
+.menu-lateral {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    z-index: 900;
+    background: #0d1b2a;
+    color: #fff;
+    width: 220px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.nav-lateral {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.nav-lateral a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ddd;
+    text-decoration: none;
+    padding: 18px 15px;
+    border-radius: 8px;
+    transition: background 0.3s;
+    font-size: 15pt;
+    margin-bottom: 15px;
+}
+
+.nav-lateral a:hover {
+    background: #1b263b;
+}
+
+/* Conteúdo Rolável da Página */
+.conteudo-principal {
+    margin-top: 60px; 
+    margin-left: 220px; 
+    padding: 20px;
+    position: relative; 
+    z-index: 1; 
+}
+
+/* Cabeçalho da Página (Botões e Título) */
+.header-discentes { 
+    display: flex; /*Alinhando o botão de sair, h1 e botão cadastrar*/
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    padding-top: 10px; 
+}
+
+.titulo-pagina {
+    font-size: 3.2rem;
+    font-weight: 500;
+    text-align: center;
+    color: #333;
+    margin: 0;
+    flex-grow: 1; /*Alinhando o botão de sair, h1 e botão cadastrar*/
+}
+
+/* Botões de Ação do Cabeçalho */
+.btn-voltar,
+.btn-adicionar {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-voltar {
+    background-color: #4285F4; 
+    color: #fff;
+    font-size: 1.2rem;
+    width: 60px; 
+}
+
+.btn-voltar:hover {
+    background-color: #357ae8;
+}
+
+.btn-adicionar {
+    background-color: #4285F4;
+    color: white;
+    font-size: 1rem;
+}
+
+.btn-adicionar:hover {
+    background-color: #357ae8;
+}
+
+/* Card/Container da Tabela */
+.card-tabela {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Barra de Busca */
+.barra-busca {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.barra-busca input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    padding-right: 40px; 
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.barra-busca .fa-magnifying-glass {
+    position: absolute;
+    right: 15px;
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* Responsividade em telas pequenas */
+.container-tabela {
+    overflow-x: auto; 
+}
+
+.tabela-discentes { 
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    text-align: left;
+}
+
+/* Cabeçalho da Tabela */
+.tabela-discentes th {
+    color: #1a2530;
+    padding: 15px 12px;
+    font-weight: normal;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    letter-spacing: 0.05rem;
+    border-bottom: 3px solid #f0f0f0;
+}
+
+.tabela-discentes tbody td { 
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #555;
+}
+
+/* Cor mais clara para linhas pares */
+.tabela-discentes tbody tr:nth-child(even) { 
+    background-color: #f9f9f9;
+}
+
+/* Cor branca para linhas ímpares */
+.tabela-discentes tbody tr:nth-child(odd) { 
+    background-color: #fff; 
+}
+
+/* Alinhamento de Colunas (Nome, Idade, E-mail, Turma, Ações) */
+.coluna-nome {
+    width: 25%;
+}
+
+.coluna-idade {
+    width: 20%;
+}
+
+.coluna-email {
+    width: 30%;
+}
+
+.coluna-turma {
+    width: 20%;
+}
+
+.coluna-acoes {
+    width: 15%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Ícones de Ação */
+.coluna-acoes i {
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-left: 15px;
+    transition: color 0.2s ease;
+}
+
+.acao-editar {
+    color: #1a2530; 
+}
+
+.acao-editar:hover {
+    color: #2a5cac;
+}
+
+.acao-excluir {
+    color: #1a2530; 
+}
+
+.acao-excluir:hover {
+    color: #c0392b;
+}
+
+/* Responsividade para Tablets e Telas Médias */
+@media (max-width: 1024px) {
+    .menu-lateral {
+        width: 180px;
+    }
+
+    .conteudo-principal {
+        margin-left: 180px;
+    }
+}
+
+/* Responsividade para Celular */
+@media (max-width: 768px) {
+    .menu-principal h2 {
+        font-size: 1.2rem;
+    }
+
+    .menu-principal .logo-menu {
+        height: 50px;
+    }
+
+    /* Mostra o hambúrguer no mobile */
+    .hamburguer {
+        display: block !important; /* Força a visibilidade no mobile */
+        margin-left: auto;
+        order: 1;
+    }
+
+    /* Ajuste de posição dos ícones de perfil/sair no mobile */
+    .menu-icones {
+        margin-left: 15px;
+        order: 2;
+    }
+
+    /* Menu lateral recolhível (Escondido por padrão no mobile) */
+    .menu-lateral {
+        position: fixed;
+        top: 60px;
+        left: -100%; 
+        width: 200px;
+        height: calc(100% - 60px);
+        transition: left 0.3s ease;
+        z-index: 999;
+        padding-top: 20px;
+    }
+
+    /* Quando a classe 'ativo' é adicionada via JavaScript */
+    .menu-lateral.ativo {
+        left: 0; /* Desliza para a tela */
+    }
+
+    /* O conteúdo principal deve começar do topo da tela no mobile */
+    .conteudo-principal {
+        margin-left: 0; /* Ocupa a largura total */
+        padding: 15px;
+    }
+}
+
+/* Responsividade do Header no Mobile (max-width: 580px) */
+@media (max-width: 580px) {
+    .header-discentes { 
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto;
+        justify-content: space-between;
+    }
+
+    .titulo-pagina {
+        grid-column: 1 / span 2;
+        order: -1;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    .btn-adicionar {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+}
+
+/* Celulares Pequenos */
+@media (max-width: 480px) {
+    .menu-principal {
+        padding: 0 10px;
+    }
+
+    .menu-principal h2 {
+        font-size: 1rem;
+    }
+
+    .icone-menu {
+        font-size: 16pt;
+    }
+}

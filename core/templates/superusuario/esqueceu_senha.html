@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGE - Esqueceu Senha</title>
+    <link rel="stylesheet" href="esqueceu_senha.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!--Div Global-->
+    <div class="container">
+
+        <!--Menu Topo, Fixo-->
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>sige</h2>
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <!--Menu Lateral, Fixo-->
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+
+        <!--Main conténdo todo conteúdo da Página-->
+        <main>
+            <div class="topo-formulario">
+                <h1>Recuperar senha</h1>
+            </div>
+
+            <div class="conteudo-principal-rolavel">
+
+                <form class="formulario" action="endereco_docente.html" method="GET">
+
+                    <div class="caixa-texto">
+                        <label for="email">E-mail</label>
+                        <input type="email" name="email" placeholder="exemplo@email.com">
+                    </div>
+
+                    <div class="botoes">
+                        <button type="submit" class="btn">Recuperar Senha</button>
+                    </div>
+                </form>
+        </main>
+    </div>
+
+    <!--Script para Função Hamburguer(responsividade)-->
+    <script>
+        // Função para aplicar a máscara de telefone (xx)xxxxx-xxxx
+        function maskTelefone(event) {
+            const input = event.target;
+            let value = input.value.replace(/\D/g, ""); // 1. Remove tudo que não for dígito
+            let maskedValue = "";
+
+            if (value.length > 0) {
+                maskedValue += "(" + value.substring(0, 2); // (xx
+            }
+            if (value.length > 2) {
+                maskedValue += ") " + value.substring(2, 7); // (xx) xxxxx
+            }
+            if (value.length > 7) {
+                maskedValue += "-" + value.substring(7, 11); // (xx) xxxxx-xxxx
+            }
+
+            input.value = maskedValue;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+            const neSim = document.getElementById("ne_sim");
+            const neNao = document.getElementById("ne_nao");
+            const descricaoNeContainer = document.getElementById("descricao-ne-container");
+            const descricaoNeInput = document.getElementById("descricao_ne");
+
+            // Atribui a função de máscara ao campo de telefone
+            const telefoneInput = document.getElementById("telefone");
+            if (telefoneInput) {
+                telefoneInput.addEventListener("input", maskTelefone);
+            }
+
+            // Função do menu hambúrguer
+            toggleBtn.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+
+            // Lógica para mostrar/esconder o campo de descrição da NE
+            function toggleDescricaoNE() {
+                if (neSim && neSim.checked) {
+                    descricaoNeContainer.style.display = 'flex';
+                    descricaoNeInput.setAttribute('required', '');
+                } else if (descricaoNeContainer) {
+                    descricaoNeContainer.style.display = 'none';
+                    descricaoNeInput.removeAttribute('required');
+                    descricaoNeInput.value = '';
+                }
+            }
+            if (neSim && neNao) {
+                neSim.addEventListener('change', toggleDescricaoNE);
+                neNao.addEventListener('change', toggleDescricaoNE);
+            }
+            toggleDescricaoNE();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGE - Cadastrar Discentes</title>
+    <link rel="stylesheet" href="cadastrar_discente.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!--Div Global-->
+    <div class="container">
+
+        <!--Menu Topo, Fixo-->
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>sige</h2>
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <!--Menu Lateral, Fixo-->
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+
+        <!--Main conténdo todo conteúdo da Página-->
+        <main>
+            <div class="topo-formulario">
+                <h1>cadastrar discentes</h1>
+            </div>
+
+            <div class="conteudo-principal-rolavel">
+
+                <div class="passos-indicadores">
+                    <span class="passo ativo">1. Dados Pessoais</span>
+                    <span class="passo inativo">2. Endereço</span>
+                    <span class="passo inativo">3. Alocação</span> </div>
+
+                <form class="formulario" action="endereco_discente.html" method="GET">
+
+                    <div class="caixa-texto">
+                        <label for="nome">Nome</label>
+                        <input type="text" name="nome" placeholder="Digite o nome completo">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="cpf">CPF</label>
+                        <input type="text" name="cpf" placeholder="Digite o seu CPF">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="email">E-mail</label>
+                        <input type="email" name="email" placeholder="exemplo@email.com">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="telefone">Telefone</label>
+                        <input type="tel" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX" maxlength="15">
+                    </div>
+                    <div class="caixa-texto">
+                        <label for="data_nascimento">Nascimento</label>
+                        <input type="date" name="data_nascimento">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="naturalidade">Naturalidade</label>
+                        <select name="naturalidade" id="naturalidade">
+                            <option value="" disabled selected>Selecione a Naturalidade</option>
+                            <option value="brasileiro">Brasileiro(a)</option>
+                            <option value="estrangeiro">Estrangeiro(a)</option>
+                        </select>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="nome_pai">Filiação 1</label>
+                        <input type="text" name="nome_pai" placeholder="Nome completo do pai">
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label for="nome_mae">Filiação 2</label>
+                        <input type="text" name="nome_mae" placeholder="Nome completo da mãe">
+                    </div>
+
+                    <div class="caixa-texto" id="necessidade-especial-container">
+                        <label>Aluno com NE</label>
+                        <div class="radio-opcoes-simples">
+                            <input type="radio" id="ne_sim" name="necessidades_especiais" value="sim">
+                            <label for="ne_sim">Sim</label>
+
+                            <input type="radio" id="ne_nao" name="necessidades_especiais" value="nao" checked>
+                            <label for="ne_nao">Não</label>
+                        </div>
+                    </div>
+
+                    <div class="caixa-texto" id="descricao-ne-container" style="display: none;">
+                        <label for="descricao_ne">Descrição</label>
+                        <textarea name="descricao_ne" id="descricao_ne" placeholder="Descreva a necessidade especial"></textarea>
+                    </div>
+
+                    <div class="botoes">
+                        <button type="submit" class="btn">Próximo</button>
+                        <a href="superusuario.html" class="btn-voltar2">Voltar</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!--Script para Função Hamburguer(responsividade)-->
+    <script>
+        // Função para aplicar a máscara de telefone (xx)xxxxx-xxxx
+        function maskTelefone(event) {
+            const input = event.target;
+            let value = input.value.replace(/\D/g, ""); // 1. Remove tudo que não for dígito
+            let maskedValue = "";
+
+            if (value.length > 0) {
+                maskedValue += "(" + value.substring(0, 2); // (xx
+            }
+            if (value.length > 2) {
+                maskedValue += ") " + value.substring(2, 7); // (xx) xxxxx
+            }
+            if (value.length > 7) {
+                maskedValue += "-" + value.substring(7, 11); // (xx) xxxxx-xxxx
+            }
+
+            input.value = maskedValue;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+            const neSim = document.getElementById("ne_sim");
+            const neNao = document.getElementById("ne_nao");
+            const descricaoNeContainer = document.getElementById("descricao-ne-container");
+            const descricaoNeInput = document.getElementById("descricao_ne");
+
+            // Atribui a função de máscara ao campo de telefone
+            const telefoneInput = document.getElementById("telefone");
+            if (telefoneInput) {
+                telefoneInput.addEventListener("input", maskTelefone);
+            }
+
+            // Função do menu hambúrguer
+            toggleBtn.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+
+            // Lógica para mostrar/esconder o campo de descrição da NE
+            function toggleDescricaoNE() {
+                if (neSim.checked) {
+                    descricaoNeContainer.style.display = 'flex';
+                    descricaoNeInput.setAttribute('required', '');
+                } else {
+                    descricaoNeContainer.style.display = 'none';
+                    descricaoNeInput.removeAttribute('required');
+                    descricaoNeInput.value = '';
+                }
+            }
+            neSim.addEventListener('change', toggleDescricaoNE);
+            neNao.addEventListener('change', toggleDescricaoNE);
+            toggleDescricaoNE();
+        });
+    </script>
+</body>
+
+</html>

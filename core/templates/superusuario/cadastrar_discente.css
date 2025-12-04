@@ -1,0 +1,498 @@
+/* Configuração Geral da Página */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+body {
+    background-color: #f6f7fb;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/*Menu Topo, Fixo*/
+.menu-principal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #0d1b2a;
+    height: 60px;
+    color: #fff;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #f6f7fb;
+}
+
+.menu-principal .logo-menu {
+    height: 70px;
+    width: auto;
+}
+
+.menu-principal h2 {
+    margin: 0;
+    font-size: 20pt;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+}
+
+.menu-principal .menu-icon-start {
+    margin-right: 10px;
+    background: #a2a5aa;
+    padding: 8px;
+    border-radius: 100px;
+}
+
+.menu-principal .icone-menu {
+    font-size: 20pt;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.menu-principal .icone-menu:hover {
+    transform: scale(1.1);
+}
+
+/* Hamburguer para responsividade */
+.hamburguer {
+    display: none !important;
+}
+
+/* Icones user e sair */
+.menu-icones {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/*Menu Lateral, Fixo*/
+.menu-lateral {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    z-index: 900;
+    background: #0d1b2a;
+    color: #fff;
+    width: 220px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.nav-lateral {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.nav-lateral a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ddd;
+    text-decoration: none;
+    padding: 18px 15px;
+    border-radius: 8px;
+    transition: background 0.3s;
+    font-size: 15pt;
+    margin-bottom: 15px;
+}
+
+.nav-lateral a:hover {
+    background: #1b263b;
+}
+
+/* Conteúdo Rolável da Página */
+main {
+    margin-left: 220px;
+    margin-top: 60px;
+    padding: 20px;
+    width: auto;
+    min-height: calc(100vh - 60px);
+}
+
+.conteudo-principal-rolavel {
+   background: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 20px auto;
+    padding-top: 50px;
+    margin-top: 30px;
+    padding-bottom: 30px;
+}
+
+.topo-formulario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    margin-top: 30px;
+    padding-top: 0;
+}
+
+.topo-formulario h1 {
+    font-weight: normal;
+    font-size: 25pt;
+    color: #0d1b2a;
+    margin: 0;
+    text-align: center;
+    letter-spacing: 0.1rem;
+    text-transform: capitalize;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 10px;
+}
+
+/* Estilo para a Caixa de Texto (Label + Input/Select/Textarea) */
+.caixa-texto {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+    margin-bottom: 10px;
+}
+
+.caixa-texto label {
+    font-size: 14pt;
+    color: #333;
+    width: 120px;
+    min-width: 120px;
+    text-align: justify;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.caixa-texto input[type="text"],
+.caixa-texto input[type="email"],
+.caixa-texto input[type="password"],
+.caixa-texto input[type="number"],
+.caixa-texto input[type="date"],
+.caixa-texto input[type="tel"],
+.caixa-texto select,
+.caixa-texto textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #868686;
+    transition: border-color 0.3s;
+}
+
+.caixa-texto textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.caixa-texto select {
+    color: #868686;
+}
+
+.caixa-texto select:focus,
+.caixa-texto input:focus,
+.caixa-texto textarea:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+
+/* --- Estilos para o campo Radio Button (Aluno com NE) --- */
+#necessidade-especial-container {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+}
+
+#necessidade-especial-container>label {
+    font-size: 14pt;
+    color: #333;
+    text-align: left;
+    margin: 0;
+    width: 120px;
+    min-width: 120px;
+}
+
+.radio-opcoes-simples {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.radio-opcoes-simples label {
+    margin-right: 50px;
+    font-size: 14px;
+    color: #333;
+    width: auto;
+    min-width: auto;
+}
+
+.radio-opcoes-simples input[type="radio"] {
+    margin: 0;
+    padding: 0;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+}
+
+
+/* --- Estilos para Indicadores de Passo --- */
+.passos-indicadores {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.passo {
+    padding: 8px 15px;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    color: #666;
+    font-weight: 500;
+    font-size: 14px;
+    border: 1px solid #e0e0e0;
+}
+
+.passo.ativo {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+/* Estilo para o passo que já foi concluído */
+.passo.completo {
+    background-color: #38a169;
+    color: white;
+    border-color: #38a169;
+}
+
+.passo.completo i {
+    margin-right: 5px;
+}
+
+/* Botões Próximo/Salvar e Voltar/Anterior */
+.botoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+
+/* Estilo para o botão que fica à direita (Próximo, Salvar Cadastro) */
+.btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: auto;
+    order: 2;
+}
+
+.btn:hover {
+    background-color: #357ab8;
+}
+
+/* Estilo para o botão "Voltar" na primeira página (Voltar) */
+.btn-voltar2 {
+    background-color: #e5e5e5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    text-decoration: none;
+    margin-left: 0;
+    order: 1;
+}
+
+/* Estilo para o botão "Anterior" nas páginas 2 e 3 (btn-voltar-tab) */
+.btn-voltar-tab {
+    background-color: #e5e5e5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    text-decoration: none;
+    order: 1;
+}
+
+.btn-voltar2:hover,
+.btn-voltar-tab:hover {
+    background-color: #d0d0d0;
+}
+
+/*Responsividade*/
+@media (max-width: 1024px) {
+    .menu-lateral {
+        width: 180px;
+    }
+
+    main {
+        margin-left: 180px;
+    }
+}
+
+/* Responsividade para Celular */
+@media (max-width: 768px) {
+    .menu-principal h2 {
+        font-size: 1.2rem;
+    }
+
+    .hamburguer {
+        display: block !important;
+        margin-left: auto;
+    }
+
+    .menu-lateral {
+        left: -100%;
+        width: 200px;
+        height: calc(100% - 60px);
+    }
+
+    .menu-lateral.ativo {
+        left: 0;
+    }
+
+    main {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .conteudo-principal-rolavel {
+        margin: 15px auto;
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .caixa-texto {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .caixa-texto label {
+        width: 100%;
+        min-width: 100%;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .botoes {
+        justify-content: space-between;
+        padding-right: 0;
+        /* Inverte a ordem para Próximo/Salvar ficar em cima do Anterior em mobile */
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .botoes .btn,
+    .botoes .btn-voltar2,
+    .botoes .btn-voltar-tab {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+    .botoes .btn {
+        order: 1;
+    }
+
+    .botoes .btn-voltar2,
+    .botoes .btn-voltar-tab {
+        order: 2;
+    }
+
+    /* Responsividade NE */
+    #necessidade-especial-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    #necessidade-especial-container>label {
+        width: 100%;
+        text-align: left;
+    }
+
+    .radio-opcoes-simples {
+        width: 100%;
+        margin-top: 5px;
+        justify-content: flex-start;
+    }
+
+    /* Responsividade Indicadores */
+    .passos-indicadores {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .passo {
+        text-align: center;
+    }
+}
+
+/* Celulares Pequenos */
+@media (max-width: 480px) {
+    .menu-principal {
+        padding: 0 10px;
+    }
+
+    .menu-principal h2 {
+        font-size: 1rem;
+    }
+
+    .icone-menu {
+        font-size: 16pt;
+    }
+
+    .topo-formulario h1 {
+        font-size: 18pt;
+    }
+}
+
+/* * FIX: Sobrescreve a cor de fundo azul/amarela aplicada automaticamente
+ * pelo navegador em campos que usam o recurso de Preenchimento Automático (Autofill).
+ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+    box-shadow: 0 0 0px 1000px #fff inset;
+    -webkit-text-fill-color: #333;
+    transition: background-color 5000s ease-in-out 0s;
+}

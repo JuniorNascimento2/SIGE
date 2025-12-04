@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrutura de Menus - Discentes</title>
+    <link rel="stylesheet" href="discente.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+    <!--Div Global-->
+    <div class="container">
+
+        <!--Menu do Topo, Fixo-->
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>sige</h2>
+
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <!--Menu Lateral, Fixo-->
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+
+        <!--Main conténdo todo conteúdo da Página-->
+        <main class="conteudo-principal">
+            <div class="header-discentes">
+                <button class="btn-voltar">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h1 class="titulo-pagina">Discentes</h1> <button class="btn-adicionar">
+                    Adicionar Discente </button>
+            </div>
+
+            <!--Card-->
+            <div class="card-tabela">
+                <div class="barra-busca">
+                    <input type="text" placeholder="Buscar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <!--Container das Tabelas-->
+                <div class="container-tabela">
+                    <table class="tabela-discentes">
+                        <thead>
+                            <tr>
+                                <th class="coluna-nome">Nome</th>
+                                <th class="coluna-idade">Idade</th>
+                                <th class="coluna-email">Email</th>
+                                <th class="coluna-turma">Turma</th>
+                                <th class="coluna-acoes">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ana Silva</td>
+                                <td>17</td>
+                                <td>ana.silva@escola.com</td>
+                                <td>3º Mecânica</td>
+                                <td class="coluna-acoes">
+                                    <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                                    <i class="fa-solid fa-trash acao-excluir"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Bruno Costa</td>
+                                <td>16</td>
+                                <td>bruno.costa@escola.com</td>
+                                <td>2º Tsi</td>
+                                <td class="coluna-acoes">
+                                    <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                                    <i class="fa-solid fa-trash acao-excluir"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Carla Souza</td>
+                                <td>18</td>
+                                <td>carla.souza@escola.com</td>
+                                <td>4º Eletro</td>
+                                <td class="coluna-acoes">
+                                    <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                                    <i class="fa-solid fa-trash acao-excluir"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Daniel Rocha</td>
+                                <td>17</td>
+                                <td>daniel.rocha@escola.com</td>
+                                <td>3º Eventos</td>
+                                <td class="coluna-acoes">
+                                    <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                                    <i class="fa-solid fa-trash acao-excluir"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Elisa Pereira</td>
+                                <td>16</td>
+                                <td>elisa.pereira@escola.com</td>
+                                <td>2º Gestur</td>
+                                <td class="coluna-acoes">
+                                    <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                                    <i class="fa-solid fa-trash acao-excluir"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Fábio Guedes</td>
+                                <td>18</td>
+                                <td>fabio.guedes@escola.com</td>
+                                <td>4º Tsi</td>
+                                <td class="coluna-acoes">
+                                    <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                                    <i class="fa-solid fa-trash acao-excluir"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Giovana Lima</td>
+                                <td>17</td>
+                                <td>giovana.lima@escola.com</td>
+                                <td>3º Info</td>
+                                <td class="coluna-acoes">
+                                    <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                                    <i class="fa-solid fa-trash acao-excluir"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Henrique Alves</td>
+                                <td>16</td>
+                                <td>henrique.alves@escola.com</td>
+                                <td>2º Tsi</td>
+                                <td class="coluna-acoes">
+                                    <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                                    <i class="fa-solid fa-trash acao-excluir"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!--Script para Função Hamburguer(responsividade)-->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+
+            toggleBtn.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+        });
+    </script>
+</body>
+
+</html>
