@@ -32,7 +32,7 @@
                     <select name="{{ col.dia }}_{{ row.index }}">
                         <option value="">-- Vazio --</option>
 
-                        {% for d in disciplinas %}
+                        {% for d in col.disciplinas %}
                             <option value="{{ d.nome }}"
                                 {% if col.valor == d.nome %}selected{% endif %}>
                                 {{ d.nome }} – {{ d.professor.nome_completo }}

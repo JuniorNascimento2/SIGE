@@ -1,51 +1,91 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
 {% load static %}
 
 {% block title %}Painel do Superusuário{% endblock %}
-{% block header_title %}Painel do Superusuário{% endblock %}
-
-
-{% block user_info %}
-  
-  <span>Olá, <a href="{% url 'editar_perfil_super' %}" title="Editar Perfil">{{ request.user.first_name|default:request.user.username }}</a></span>
-  <a href="{% url 'editar_perfil_super' %}" title="Editar Perfil"><i class="fas fa-user"></i></a>
-  
-  <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
-{% endblock %}
-
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'core/css/painel_super.css' %}" />
+<link rel="stylesheet" href="{% static 'core/css/painel_super.css' %}">
 {% endblock %}
 
 {% block content %}
 
-  <section class="icones-principais">
-    <a href="{% url 'listar_alunos' %}" class="icone" title="Gerenciar Alunos">
-      <img src="{% static 'core/img/aluno.png' %}" alt="Aluno" />
-      <p>Discentes</p>
-    </a>
-    <a href="{% url 'listar_professores' %}" class="icone" title="Gerenciar Professores">
-      <img src="{% static 'core/img/professor.png' %}" alt="Professor" />
-      <p>Docentes</p>
-    </a>
-  
-    <a href="{% url 'listar_turmas' %}" class="icone" title="Diário">
-      <img src="{% static 'core/img/turma.png' %}" alt="Turma" />
-      <p>Turmas</p>
-    </a>
-    {% if cargo in 'diretor vice_diretor' or user.is_superuser %}
-  <div class="gestao-container">
-    <h2>Gestão Escolar</h2>
-    <a href="{% url 'listar_gestores' %}" class="btn">Gerenciar Gestores</a>
-  </div>
-  {% endif %}
-  </section>
+<div class="container">
 
-  <section class="info-box">
-    <div><strong>{{ total_alunos }}</strong><br>Discentes</div>
-    <div><strong>{{ total_professores }}</strong><br>Docentes</div>
-    <div><strong>{{ total_disciplinas }}</strong><br>Disciplinas</div>
-    <div><strong>{{ total_turmas }}</strong><br>Turmas</div>
-  </section>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="conteudo-principal-rolavel">
+
+        <div class="usuario">
+            <h1>Olá, {{ request.user.first_name|default:request.user.username }}</h1>
+        </div>
+
+        <div class="conteudo-geral">
+
+            <!-- CARDS -->
+            <section class="cards">
+
+                <div class="card">
+                    <p>Total de Turmas</p>
+                    <h2>{{ total_turmas }}</h2>
+                </div>
+
+                <div class="card">
+                    <p>Total de Alunos</p>
+                    <h2>{{ total_alunos }}</h2>
+                </div>
+
+                <div class="card">
+                    <p>Total de Professores</p>
+                    <h2>{{ total_professores }}</h2>
+                </div>
+
+                <div class="card">
+                    <p>Total de Disciplinas</p>
+                    <h2>{{ total_disciplinas }}</h2>
+                </div>
+
+            </section>
+
+            <!-- CALENDÁRIO -->
+            <div class="calendario-container">
+                <div class="calendario">
+                    <div class="calendario-box">
+                        <div class="calendario-cabecalho">
+                            <h2>{{ agora|date:"F"|upper }}</h2>
+                        </div>
+
+                        <div class="calendario-grade">
+
+                            <!-- Nome dos dias -->
+                            <div class="nome-dia">DOM</div>
+                            <div class="nome-dia">SEG</div>
+                            <div class="nome-dia">TER</div>
+                            <div class="nome-dia">QUA</div>
+                            <div class="nome-dia">QUI</div>
+                            <div class="nome-dia">SEX</div>
+                            <div class="nome-dia">SAB</div>
+
+                            {% for celula in calendario %}
+                                <div class="dia {% if celula.hoje %}atual{% endif %} {% if celula.vazio %}vazio{% endif %}">
+                                    {% if not celula.vazio %}{{ celula.numero }}{% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById("menu-toggle");
+    const menuLateral = document.getElementById("menu-lateral");
+
+    toggleBtn.addEventListener("click", () => {
+        menuLateral.classList.toggle("ativo");
+    });
+});
+</script>
 
 {% endblock %}

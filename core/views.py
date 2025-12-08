@@ -46,6 +46,27 @@ def logout_view(request):
     return redirect('login')
 
 
+
+from datetime import datetime
+import calendar
+
+def gerar_calendario():
+    hoje = datetime.today()
+    ano = hoje.year
+    mes = hoje.month
+
+    cal = calendar.monthcalendar(ano, mes)
+    celulas = []
+
+    for semana in cal:
+        for dia in semana:
+            celulas.append({
+                "numero": dia,
+                "vazio": dia == 0,
+                "hoje": dia == hoje.day,
+            })
+
+    return celulas
 # -------------------- SUPERUSUÁRIO --------------------
 def is_superuser(user):
     return user.is_superuser
@@ -56,13 +77,15 @@ def is_superuser(user):
 def painel_super(request):
     foto_perfil_url = get_foto_perfil(request.user)
 
-    return render(request, 'core/painel_super.html', {
-        'usuario': request.user,
-        'total_professores': Professor.objects.count(),
-        'total_alunos': Aluno.objects.count(),
-        'total_turmas': Turma.objects.count(),
-        'total_disciplinas': Disciplina.objects.count(),
-        'foto_perfil_url': foto_perfil_url,
+    return render(request, "core/painel_super.html", {
+        "usuario": request.user,
+        "total_professores": Professor.objects.count(),
+        "total_alunos": Aluno.objects.count(),
+        "total_turmas": Turma.objects.count(),
+        "total_disciplinas": Disciplina.objects.count(),
+        "foto_perfil_url": foto_perfil_url,
+        "agora": datetime.now(),
+        "calendario": gerar_calendario(),
     })
 
 
@@ -321,28 +344,50 @@ from .forms import GestorForm
 from .models import Gestor
 
 @login_required
-@login_required
 def editar_gestor(request, gestor_id):
     gestor = get_object_or_404(Gestor, id=gestor_id)
     user = gestor.user
 
     # Permissão: superusuário ou o próprio gestor
-    if not (request.user.is_superuser or (hasattr(request.user, 'gestor') and request.user.gestor == gestor)):
+    is_super = request.user.is_superuser
+    is_mesmo_gestor = hasattr(request.user, 'gestor') and request.user.gestor == gestor
+
+    if not (is_super or is_mesmo_gestor):
         messages.error(request, "Você não tem permissão para editar este gestor.")
         return redirect('painel_gestor')
 
     if request.method == 'POST':
-        form = GestorForm(request.POST, instance=gestor, request=request)  # passa request
+        form = GestorForm(request.POST, instance=gestor, request=request)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Gestor atualizado com sucesso!')
+
+            # Atualiza senha se foi informada
+            nova_senha = form.cleaned_data.get("senha")
+            if nova_senha:
+                user.set_password(nova_senha)
+                user.save()
+
+                # Mantém sessão ativa caso seja o próprio gestor alterando a senha
+                if is_mesmo_gestor:
+                    update_session_auth_hash(request, user)
+
+            messages.success(request, "Gestor atualizado com sucesso!")
+
+            # 🔥 Redirecionamento correto:
+            # Superusuário volta para a lista de gestores
+            if is_super:
+                return redirect('listar_gestores')
+
+            # Gestor comum volta ao painel dele
             return redirect('painel_gestor')
+
         else:
-            messages.error(request, 'Corrija os erros abaixo.')
+            messages.error(request, "Corrija os erros abaixo.")
     else:
         form = GestorForm(instance=gestor, initial={'email': user.email})
 
     return render(request, 'core/editar_gestor.html', {'form': form, 'gestor': gestor})
+
 
 
 
@@ -847,14 +892,11 @@ HORARIOS = {
 @login_required
 def grade_horaria(request, turma_id):
     turma = get_object_or_404(Turma, id=turma_id)
-
-    # cria a grade caso não exista
     grade, criado = GradeHorario.objects.get_or_create(turma=turma)
 
     dias = ["segunda", "terca", "quarta", "quinta", "sexta"]
     nomes_dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
 
-    # 🔥 NORMALIZA O TURNO PARA EVITAR KeyError
     turno_key = (
         turma.turno.lower()
         .replace("ã", "a")
@@ -863,19 +905,45 @@ def grade_horaria(request, turma_id):
 
     horarios = HORARIOS.get(turno_key, [])
 
-    # evita crash caso exista turno inválido
     if not horarios:
         messages.error(request, "Turno inválido nesta turma.")
-        horarios = [""]  
+        horarios = [""]
 
-    # se a grade estiver vazia, cria estrutura
     if not grade.dados:
         grade.dados = {dia: [""] * len(horarios) for dia in dias}
         grade.save()
 
-    disciplinas = Disciplina.objects.filter(turma=turma)
+    disciplinas_turma = Disciplina.objects.filter(turma=turma)
 
-    # ---------- SALVAR (POST) ----------
+    # ----------------------------------------------
+    # 1) MAPEAR TODAS AS OCUPAÇÕES DE PROFESSORES
+    # ----------------------------------------------
+    ocupados = {}   # {professor_id: {(dia, index)} }
+
+    outras_grades = GradeHorario.objects.exclude(turma=turma)
+
+    for g in outras_grades:
+        for dia in dias:
+            lista = g.dados.get(dia, [])
+            for idx, nome_disciplina in enumerate(lista):
+                if not nome_disciplina:
+                    continue
+
+                try:
+                    disc = Disciplina.objects.get(nome=nome_disciplina, turma=g.turma)
+                except Disciplina.DoesNotExist:
+                    continue
+
+                prof = disc.professor_id
+
+                if prof not in ocupados:
+                    ocupados[prof] = set()
+
+                ocupados[prof].add((dia, idx))
+
+    # ----------------------------------------------
+    # 2) SALVAR (POST)
+    # ----------------------------------------------
     if request.method == "POST":
         new_data = {dia: [] for dia in dias}
 
@@ -891,25 +959,40 @@ def grade_horaria(request, turma_id):
         messages.success(request, "Grade horária atualizada com sucesso!")
         return redirect("grade_horaria", turma_id=turma.id)
 
-    # ---------- MONTAR LINHAS PARA O TEMPLATE ----------
+    # ----------------------------------------------
+    # 3) MONTAR TABELA PARA O TEMPLATE
+    #     → Aqui vamos filtrar disciplinas ocupadas
+    # ----------------------------------------------
     rows = []
     for i, horario in enumerate(horarios):
-        row = {
-            "index": i,
-            "horario": horario,
-            "cols": []
-        }
+        row = {"index": i, "horario": horario, "cols": []}
 
         for dia in dias:
+
+            # valor atual da célula
             lista = grade.dados.get(dia, [])
             valor = ""
-
             if isinstance(lista, list) and i < len(lista):
                 valor = lista[i] or ""
+
+            # ----------------------------
+            # FILTRAR DISCIPLINAS DISPONÍVEIS
+            # ----------------------------
+            disciplinas_disponiveis = []
+            for d in disciplinas_turma:
+
+                prof_id = d.professor_id
+
+                # se o professor está ocupado neste dia e horário → pula
+                if prof_id in ocupados and (dia, i) in ocupados[prof_id]:
+                    continue
+
+                disciplinas_disponiveis.append(d)
 
             row["cols"].append({
                 "dia": dia,
                 "valor": valor,
+                "disciplinas": disciplinas_disponiveis,  # ← envia disciplinas filtradas para este horário/dia
             })
 
         rows.append(row)
@@ -918,5 +1001,5 @@ def grade_horaria(request, turma_id):
         "turma": turma,
         "nomes_dias": nomes_dias,
         "rows": rows,
-        "disciplinas": disciplinas,
+        "disciplinas": disciplinas_turma,  # ainda enviado para o loop externo
     })
