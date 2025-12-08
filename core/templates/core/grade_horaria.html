@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Grade Horária - {{ turma.nome }}{% endblock %}
+
+{% block content %}
+
+<h2 style="text-align:center; margin-bottom:20px;">
+    Grade Horária – {{ turma.nome }} ({{ turma.get_turno_display }})
+</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <table class="grade-table">
+        <thead>
+            <tr>
+                <th>Horário</th>
+                {% for nome in nomes_dias %}
+                    <th>{{ nome }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td class="horario-col">{{ row.horario }}</td>
+
+                {% for col in row.cols %}
+                <td>
+                    <select name="{{ col.dia }}_{{ row.index }}">
+                        <option value="">-- Vazio --</option>
+
+                        {% for d in disciplinas %}
+                            <option value="{{ d.nome }}"
+                                {% if col.valor == d.nome %}selected{% endif %}>
+                                {{ d.nome }} – {{ d.professor.nome_completo }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+                </td>
+                {% endfor %}
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="submit" class="submit-btn" style="margin-top:20px;">
+        Salvar Grade
+    </button>
+</form>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.grade-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 16px;
+}
+.grade-table th {
+    background: #113f67;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+.grade-table td {
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: center;
+}
+.horario-col {
+    font-weight: bold;
+    background: #e3e3e3;
+}
+select {
+    width: 100%;
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 15px;
+}
+</style>
+{% endblock %}

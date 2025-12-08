@@ -85,6 +85,8 @@ path(
     path('painel/aluno/', views.painel_aluno, name='painel_aluno'),
     path("editar/perfil/remover-foto/", views.remover_foto_perfil, name="remover_foto_perfil"),
 
+    path("turmas/<int:turma_id>/grade/", views.grade_horaria, name="grade_horaria"),
+
 
 
 ]

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+# ------------------ TURMA ------------------
 class Turma(models.Model):
     TURNO_CHOICES = [
         ('manha', 'Manhã'),
@@ -16,6 +18,7 @@ class Turma(models.Model):
         return f"{self.nome} - {self.get_turno_display()} ({self.ano})"
 
 
+# ------------------ PROFESSOR ------------------
 class Professor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome_completo = models.CharField(max_length=255)
@@ -25,6 +28,7 @@ class Professor(models.Model):
         return self.nome_completo
 
 
+# ------------------ ALUNO ------------------
 class Aluno(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome_completo = models.CharField(max_length=255)
@@ -36,15 +40,17 @@ class Aluno(models.Model):
         return self.nome_completo
 
 
+# ------------------ DISCIPLINA ------------------
 class Disciplina(models.Model):
     nome = models.CharField(max_length=100)
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
-    
+
     def __str__(self):
         return f"{self.nome} ({self.turma})"
 
 
+# ------------------ NOTAS ------------------
 class Nota(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
@@ -58,14 +64,13 @@ class Nota(models.Model):
 
     def media(self):
         notas = [n for n in [self.nota1, self.nota2, self.nota3, self.nota4] if n is not None]
-        if notas:
-            return sum(notas) / len(notas)
-        return None
+        return sum(notas) / len(notas) if notas else None
 
     def __str__(self):
         return f"{self.aluno} - {self.disciplina}"
 
 
+# ------------------ GESTOR ------------------
 class Gestor(models.Model):
     CARGO_CHOICES = [
         ('diretor', 'Diretor'),
@@ -80,17 +85,12 @@ class Gestor(models.Model):
 
     def __str__(self):
         return f"{self.nome_completo} ({self.get_cargo_display()})"
-    
-    
 
-from django.db import models
-from django.contrib.auth.models import User
 
-class Perfil(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
-    nome_completo = models.CharField(max_length=255, blank=True, null=True)
-    foto = models.ImageField(upload_to="fotos/", blank=True, null=True)
+# ------------------ GRADE HORÁRIA ------------------
+class GradeHorario(models.Model):
+    turma = models.OneToOneField("Turma", on_delete=models.CASCADE)
+    dados = models.JSONField(default=dict)  # tabela completa da grade
 
     def __str__(self):
-        return self.nome_completo or self.user.username
-
+        return f"Grade Horária - {self.turma}"

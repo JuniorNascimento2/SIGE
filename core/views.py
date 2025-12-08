@@ -676,7 +676,6 @@ def painel_aluno(request):
         'notas_dict': notas_dict,
     })
 
-
 @login_required
 def cadastrar_disciplina_para_turma(request, turma_id):
     if not request.user.is_superuser:
@@ -702,11 +701,10 @@ def cadastrar_disciplina_para_turma(request, turma_id):
                     turma=turma
                 )
                 messages.success(request, "Disciplina cadastrada com sucesso!")
-
-                # 🔥 REDIRECIONA PARA A LISTA DE DISCIPLINAS DA TURMA
                 return redirect('listar_disciplinas_turma', turma_id=turma.id)
 
-    professores = Professor.objects.all()
+    # 🔥 Agora lista apenas professores reais (ignora superusuário)
+    professores = Professor.objects.filter(user__is_superuser=False)
 
     return render(request, 'core/cadastrar_disciplina_turma.html', {
         'turma': turma,
@@ -758,3 +756,167 @@ def get_foto_perfil(user):
     return None
 
 
+HORARIOS = {
+    "manha": [
+        "07:00 às 07:45",
+        "07:45 às 08:30",
+        "08:50 às 09:35",
+        "09:35 às 10:20",
+        "10:30 às 11:15",
+        "11:15 às 12:00",
+    ],
+    "tarde": [
+        "13:00 às 13:45",
+        "13:45 às 14:30",
+        "14:50 às 15:35",
+        "15:35 às 16:20",
+        "16:30 às 17:15",
+        "17:15 às 18:00",
+    ],
+    "noite": [
+        "19:00 às 19:45",
+        "19:45 às 20:30",
+        "20:40 às 21:25",
+        "21:25 às 22:10",
+    ],
+}
+
+from .models import GradeHorario
+
+from .models import GradeHorario
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+
+HORARIOS = {
+    "manha": [
+        "07:00 às 07:45",
+        "07:45 às 08:30",
+        "08:50 às 09:35",
+        "09:35 às 10:20",
+        "10:30 às 11:15",
+        "11:15 às 12:00",
+    ],
+    "tarde": [
+        "13:00 às 13:45",
+        "13:45 às 14:30",
+        "14:50 às 15:35",
+        "15:35 às 16:20",
+        "16:30 às 17:15",
+        "17:15 às 18:00",
+    ],
+    "noite": [
+        "19:00 às 19:45",
+        "19:45 às 20:30",
+        "20:40 às 21:25",
+        "21:25 às 22:10",
+    ],
+}
+
+
+from .models import GradeHorario
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+
+HORARIOS = {
+    "manha": [
+        "07:00 às 07:45",
+        "07:45 às 08:30",
+        "08:50 às 09:35",
+        "09:35 às 10:20",
+        "10:30 às 11:15",
+        "11:15 às 12:00",
+    ],
+    "tarde": [
+        "13:00 às 13:45",
+        "13:45 às 14:30",
+        "14:50 às 15:35",
+        "15:35 às 16:20",
+        "16:30 às 17:15",
+        "17:15 às 18:00",
+    ],
+    "noite": [
+        "19:00 às 19:45",
+        "19:45 às 20:30",
+        "20:40 às 21:25",
+        "21:25 às 22:10",
+    ],
+}
+
+@login_required
+def grade_horaria(request, turma_id):
+    turma = get_object_or_404(Turma, id=turma_id)
+
+    # cria a grade caso não exista
+    grade, criado = GradeHorario.objects.get_or_create(turma=turma)
+
+    dias = ["segunda", "terca", "quarta", "quinta", "sexta"]
+    nomes_dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
+
+    # 🔥 NORMALIZA O TURNO PARA EVITAR KeyError
+    turno_key = (
+        turma.turno.lower()
+        .replace("ã", "a")
+        .replace("á", "a")
+    )
+
+    horarios = HORARIOS.get(turno_key, [])
+
+    # evita crash caso exista turno inválido
+    if not horarios:
+        messages.error(request, "Turno inválido nesta turma.")
+        horarios = [""]  
+
+    # se a grade estiver vazia, cria estrutura
+    if not grade.dados:
+        grade.dados = {dia: [""] * len(horarios) for dia in dias}
+        grade.save()
+
+    disciplinas = Disciplina.objects.filter(turma=turma)
+
+    # ---------- SALVAR (POST) ----------
+    if request.method == "POST":
+        new_data = {dia: [] for dia in dias}
+
+        for i in range(len(horarios)):
+            for dia in dias:
+                campo = f"{dia}_{i}"
+                valor = request.POST.get(campo, "")
+                new_data[dia].append(valor)
+
+        grade.dados = new_data
+        grade.save()
+
+        messages.success(request, "Grade horária atualizada com sucesso!")
+        return redirect("grade_horaria", turma_id=turma.id)
+
+    # ---------- MONTAR LINHAS PARA O TEMPLATE ----------
+    rows = []
+    for i, horario in enumerate(horarios):
+        row = {
+            "index": i,
+            "horario": horario,
+            "cols": []
+        }
+
+        for dia in dias:
+            lista = grade.dados.get(dia, [])
+            valor = ""
+
+            if isinstance(lista, list) and i < len(lista):
+                valor = lista[i] or ""
+
+            row["cols"].append({
+                "dia": dia,
+                "valor": valor,
+            })
+
+        rows.append(row)
+
+    return render(request, "core/grade_horaria.html", {
+        "turma": turma,
+        "nomes_dias": nomes_dias,
+        "rows": rows,
+        "disciplinas": disciplinas,
+    })

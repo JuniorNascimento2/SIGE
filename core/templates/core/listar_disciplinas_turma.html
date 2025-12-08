@@ -48,6 +48,17 @@
       <button type="submit" class="buscar-btn"><i class="fas fa-search"></i></button>
     </form>
 
+   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    
+  
+
+    <a href="{% url 'grade_horaria' turma.id %}" class="btn-grade">
+        📅 Grade Horária
+    </a>
+</div>
+
+
+
     <!-- voltar -->
     <a href="{% url 'listar_turmas' %}">
       <button class="cadastrar-btn" style="background:#555">
