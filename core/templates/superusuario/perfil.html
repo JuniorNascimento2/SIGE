@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGE - Meu Perfil</title>
+    <link rel="stylesheet" href="perfil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>sige</h2>
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+
+        <main>
+            <div class="topo-formulario">
+                <h1>Minhas Informações</h1>
+            </div>
+
+            <div class="conteudo-principal-rolavel perfil-card">
+                
+                <div class="perfil-header-content">
+                    <div class="perfil-imagem-area">
+                        <img src="images.jpg" alt="Foto de Perfil" class="perfil-imagem" id="imagem-perfil">
+                        <input type="file" id="upload-imagem" accept="image/*" style="display: none;">
+                        <label for="upload-imagem" class="btn-trocar-foto" id="label-trocar-foto" style="display: none;">
+                            <i class="fa-solid fa-camera"></i>
+                        </label>
+                    </div>
+                    
+                    <div class="perfil-info-principal">
+                        <h2 id="display-nome">João Batista do Nascimento Júnior</h2>
+                        <p class="perfil-funcao">Discente</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <form class="formulario perfil-detalhes-form" id="perfil-form">
+                    
+                    <div class="linha-form">
+                        <div class="coluna-dado">
+                            <label for="nome">Nome *</label>
+                            <input type="text" name="nome" id="input-nome" value="João Batista do Nascimento Júnior" disabled>
+                        </div>
+                        <div class="coluna-dado">
+                            <label for="matricula">Matrícula</label>
+                            <input type="text" name="matricula" value="20241198060000" disabled>
+                        </div>
+                    </div>
+                    
+                    <div class="linha-form">
+                        <div class="coluna-dado">
+                            <label for="cpf">CPF</label>
+                            <input type="text" name="cpf" value="502.587.347-09" disabled>
+                        </div>
+                        <div class="coluna-dado">
+                            <label for="email">E-mail</label>
+                            <input type="email" name="email" value="junior.nascimento1@escola.ifrn.edu.br" disabled>
+                        </div>
+                    </div>
+                    
+                    <div class="linha-form">
+                        <div class="coluna-dado">
+                            <label for="data_nascimento">Data de Nascimento</label>
+                            <input type="date" name="data_nascimento" value="1999-08-16" disabled>
+                        </div>
+                        <div class="coluna-dado">
+                            <label for="telefone">Telefone</label>
+                            <input type="tel" id="telefone-perfil" name="telefone" value="(84) 98103-5313" disabled>
+                        </div>
+                    </div>
+
+                    <div class="linha-form">
+                        <div class="coluna-dado">
+                            <label for="naturalidade">Naturalidade</label>
+                            <input type="text" name="naturalidade" value="Brasileiro(a)" disabled>
+                        </div>
+                        <div class="coluna-dado">
+                            <label for="nacionalidade">Nacionalidade</label>
+                            <input type="text" name="nacionalidade" value="Brasileira" disabled>
+                        </div>
+                    </div>
+
+                    <div class="linha-form">
+                         <div class="coluna-dado full-width">
+                            <label for="nome_pai">Nome do Pai</label>
+                            <input type="text" name="nome_pai" value="Nome do pai" disabled>
+                        </div>
+                    </div>
+                    <div class="linha-form">
+                         <div class="coluna-dado full-width">
+                            <label for="nome_mae">Nome da Mãe</label>
+                            <input type="text" name="nome_mae" value="Nome da mãe" disabled>
+                        </div>
+                    </div>
+
+                    <div class="botoes-crud">
+                        <button type="button" class="btn-acao editar" id="btn-editar">
+                            <i class="fa-solid fa-pen"></i> Editar Perfil
+                        </button>
+                        
+                        <button type="submit" class="btn-acao salvar" id="btn-salvar" style="display: none;">
+                            <i class="fa-solid fa-check"></i> Salvar Alterações
+                        </button>
+                        <button type="button" class="btn-acao cancelar" id="btn-cancelar" style="display: none;">
+                            <i class="fa-solid fa-xmark"></i> Cancelar
+                        </button>
+                        
+                        <button type="button" class="btn-acao senha" id="btn-trocar-senha">
+                            <i class="fa-solid fa-lock"></i> Mudar Senha
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Referências dos Elementos
+            const menuToggle = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+            const perfilForm = document.getElementById("perfil-form");
+            const btnEditar = document.getElementById("btn-editar");
+            const btnSalvar = document.getElementById("btn-salvar");
+            const btnCancelar = document.getElementById("btn-cancelar");
+            const telefoneInput = document.getElementById("telefone-perfil");
+            const displayNome = document.getElementById('display-nome');
+            const inputNome = document.getElementById('input-nome');
+            const uploadImagemInput = document.getElementById('upload-imagem');
+            const imagemPerfil = document.getElementById('imagem-perfil');
+            const labelTrocarFoto = document.getElementById('label-trocar-foto');
+            
+            // Armazenar os valores originais para o cancelamento
+            const originalValues = {};
+            // Agora seleciona todos os inputs dentro do novo formulário, excluindo matricula e submit
+            const editableInputs = perfilForm.querySelectorAll('input:not([name="matricula"]):not([type="submit"])');
+            
+            // Função para aplicar a máscara de telefone (xx)xxxxx-xxxx (MANTIDA)
+            function maskTelefone(event) {
+                const input = event.target;
+                let value = input.value.replace(/\D/g, "");
+                let maskedValue = "";
+
+                if (value.length > 0) {
+                    maskedValue += "(" + value.substring(0, 2);
+                }
+                if (value.length > 2) {
+                    maskedValue += ") " + value.substring(2, 7);
+                }
+                if (value.length > 7) {
+                    maskedValue += "-" + value.substring(7, 11);
+                }
+
+                input.value = maskedValue;
+            }
+
+            // 1. Funcionalidade do Menu Hamburguer
+            menuToggle.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+            
+            // 2. Máscara de Telefone
+            if (telefoneInput) {
+                telefoneInput.addEventListener("input", maskTelefone);
+            }
+            
+            // 3. Lógica do CRUD (Read/Update)
+            
+            // Salva os valores iniciais e desabilita os campos ao carregar a página
+            editableInputs.forEach(input => {
+                originalValues[input.name] = input.value;
+                input.disabled = true; // Garante que todos os campos comecem desabilitados
+            });
+
+            // Alterna entre modo de visualização e edição
+            function toggleEditMode(isEditing) {
+                editableInputs.forEach(input => {
+                    if (input.name !== 'matricula') {
+                        input.disabled = !isEditing;
+                    }
+                });
+                
+                // Esconde/mostra botões e área de foto
+                btnEditar.style.display = isEditing ? 'none' : 'flex';
+                btnSalvar.style.display = isEditing ? 'flex' : 'none';
+                btnCancelar.style.display = isEditing ? 'flex' : 'none';
+                labelTrocarFoto.style.display = isEditing ? 'flex' : 'none';
+            }
+            
+            // Botão EDITAR
+            btnEditar.addEventListener('click', () => {
+                toggleEditMode(true);
+                inputNome.focus();
+            });
+            
+            // Botão CANCELAR
+            btnCancelar.addEventListener('click', () => {
+                // Restaura os valores originais
+                editableInputs.forEach(input => {
+                    input.value = originalValues[input.name];
+                });
+                displayNome.textContent = originalValues['nome'];
+                toggleEditMode(false);
+            });
+            
+            // Submissão do Formulário (SALVAR)
+            perfilForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Dados do Perfil Salvos com Sucesso! (Simulação)');
+                
+                editableInputs.forEach(input => {
+                     originalValues[input.name] = input.value;
+                });
+                
+                displayNome.textContent = originalValues['nome'];
+                toggleEditMode(false);
+            });
+
+            // 4. Pré-visualização da Imagem
+            uploadImagemInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagemPerfil.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // 5. Atualização Dinâmica do Nome no Header
+            inputNome.addEventListener('input', function() {
+                displayNome.textContent = this.value || '[Nome Vazio]';
+            });
+            
+        });
+    </script>
+</body>
+</html>
