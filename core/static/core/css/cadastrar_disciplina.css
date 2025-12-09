@@ -1,0 +1,63 @@
+body
+{
+    background-color:#fff;
+}
+.conteudo {
+    margin-left: 220px;
+    margin-top: 10px; /* ↓ antes era 60px */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+
+.titulo
+{
+    font-size:40px;
+    padding:10px;
+}
+
+.formulario
+{
+    padding-top:20px;
+    width: 100%;
+    border-top:1px solid #ededed;
+}
+
+.formulario .linha
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.formulario .linha label {
+    width: 50%;
+}
+
+.formulario input,
+.formulario select {
+    flex: 1;        
+    padding: 5px 8px;
+    color: #868686;
+}
+
+/* Responsividade para Tablets e Telas Médias */
+@media (max-width: 1024px) {
+
+    main {
+        margin-left: 180px;
+    }
+
+}
+
+/* Responsividade para Celular */
+@media (max-width: 768px) {
+
+    main {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+}
