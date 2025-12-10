@@ -1,0 +1,200 @@
+/* Configuração Geral da Página */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", Arial, sans-serif;
+}
+
+body {
+    background: #f6f7fb;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Menu Principal (Barra Superior Fixa) */
+.menu-principal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #0d1b2a;
+    height: 60px;
+    color: #fff;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #f6f7fb;
+}
+
+.menu-principal .logo-menu {
+    height: 70px; /* Será cortado para caber em 60px de altura */
+    width: auto;
+}
+
+.menu-principal h2 {
+    margin: 0;
+    font-size: 20pt;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+}
+
+.menu-principal .menu-icon-start {
+    margin-right: 10px;
+    background: #a2a5aa;
+    padding: 8px;
+    border-radius: 100px;
+}
+
+.menu-principal .icone-menu {
+    font-size: 20pt;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.menu-principal .icone-menu:hover {
+    transform: scale(1.1);
+    color: #2a5cac;
+}
+
+/* Oculta o hambúrguer por padrão (Desktop) */
+.hamburguer {
+    display: none !important;
+}
+
+/* Agrupamento dos ícones à direita (Desktop) */
+.menu-icones {
+    margin-left: auto; /* Empurra os ícones para o canto direito no Desktop */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Menu Lateral Fixo */
+.menu-lateral {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    z-index: 900;
+    background: #0d1b2a;
+    color: #fff;
+    width: 220px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.nav-lateral {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.nav-lateral a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ddd;
+    text-decoration: none;
+    padding: 18px 15px;
+    border-radius: 8px;
+    transition: background 0.3s;
+    font-size: 15pt;
+    margin-bottom: 15px;
+}
+
+.nav-lateral a:hover {
+    background: #1b263b;
+}
+
+/* Onde o conteúdo principal começa (após o menu lateral e o menu principal) */
+/* Mantido para contexto, mas remova se não for necessário */
+main {
+    margin-left: 220px;
+    margin-top: 60px;
+    padding: 20px;
+}
+
+/* ============================= */
+/* 🔹 RESPONSIVIDADE GERAL       */
+/* ============================= */
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+    .menu-lateral {
+        width: 180px;
+    }
+
+    main {
+        margin-left: 180px;
+    }
+}
+
+/* ============================= */
+/* 🔹 RESPONSIVIDADE CELULAR (MAX 768px) */
+/* ============================= */
+@media (max-width: 768px) {
+    .menu-principal h2 {
+        font-size: 1.2rem;
+    }
+
+    .menu-principal .logo-menu {
+        height: 50px;
+    }
+
+    /* Mostra o hambúrguer no mobile */
+    .hamburguer {
+        display: block !important;
+        margin-left: auto; 
+        order: 1;
+    }
+
+    /* Ajuste de posição dos ícones de perfil/sair no mobile */
+    .menu-icones {
+        margin-left: 15px;
+        order: 2;
+    }
+
+    /* Menu lateral recolhível (Escondido por padrão no mobile) */
+    .menu-lateral {
+        position: fixed;
+        top: 60px;
+        left: -100%; /* Inicia fora da tela */
+        width: 200px;
+        height: calc(100% - 60px);
+        transition: left 0.3s ease;
+        z-index: 999;
+        padding-top: 20px;
+    }
+
+    /* Quando a classe 'ativo' é adicionada via JavaScript */
+    .menu-lateral.ativo {
+        left: 0; /* Desliza para a tela */
+    }
+
+    /* O conteúdo principal deve começar do topo da tela no mobile */
+    main {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+    .menu-principal {
+        padding: 0 10px;
+    }
+
+    .menu-principal h2 {
+        font-size: 1rem;
+    }
+
+    .icone-menu {
+        font-size: 16pt;
+    }
+}

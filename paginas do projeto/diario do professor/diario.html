@@ -1,0 +1,113 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrutura de Menus</title>
+    <link rel="stylesheet" href="diario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>sige</h2>
+
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+<main>
+    <h1 class="main-title">Diário do Professor</h1>
+
+    <div class="top-row">
+        <button class="btn-add">Adicionar turma</button>
+    </div>
+
+    <div class="search-box">
+        <input class="search-input" type="text" placeholder="Buscar turma, ano...">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+    </div>
+
+    <div class="table-card">
+
+        <!-- Cabeçalho da tabela -->
+        <div class="table-head">
+            <div>Turma</div>
+            <div>Ano</div>
+            <div>Data Início</div>
+            <div>Data Fim</div>
+            <div>Ações</div>
+        </div>
+
+        <!-- Corpo da tabela -->
+        <div class="table-body">
+
+            <!-- Linha 1 -->
+            <div class="table-row">
+                <div class="cell cell--turma">Turma A - Matemática</div>
+                <div class="cell">2025</div>
+                <div class="cell">01/03/2025</div>
+                <div class="cell">30/11/2025</div>
+                <div class="cell acoes">
+                    <button class="acao-btn edit" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="acao-btn view" title="Visualizar"><i class="fa-solid fa-eye"></i></button>
+                    <button class="acao-btn delete" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+
+            <!-- Linha 2 -->
+            <div class="table-row">
+                <div class="cell cell--turma">Turma B - Português</div>
+                <div class="cell">2025</div>
+                <div class="cell">05/03/2025</div>
+                <div class="cell">20/11/2025</div>
+                <div class="cell acoes">
+                    <button class="acao-btn edit" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="acao-btn view" title="Visualizar"><i class="fa-solid fa-eye"></i></button>
+                    <button class="acao-btn delete" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+
+            <!-- Linha 3 -->
+            <div class="table-row">
+                <div class="cell cell--turma">Turma C - História</div>
+                <div class="cell">2024</div>
+                <div class="cell">12/02/2024</div>
+                <div class="cell">15/12/2024</div>
+                <div class="cell acoes">
+                    <button class="acao-btn edit" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="acao-btn view" title="Visualizar"><i class="fa-solid fa-eye"></i></button>
+                    <button class="acao-btn delete" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+
+            toggleBtn.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+        });
+    </script>
+</body>
