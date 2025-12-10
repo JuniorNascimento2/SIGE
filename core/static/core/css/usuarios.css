@@ -13,11 +13,9 @@ body {
 }
 
 /* Conteúdo Rolável da Página */
-main {
-    margin-left: 220px;
-    margin-top: 20px; /* ↓ reduzido (antes 60px) */
-    padding: 20px;
-}
+/*main {
+
+}*/
 
 .titulo-painel {
     font-size: 2.8rem;
@@ -36,7 +34,7 @@ main {
     justify-content: center;
     flex-wrap: wrap; 
     padding: 10px 0;
-    margin-top: 30px; /* ↓ reduzido (antes 80px) */
+    margin-top: 100px; /* ↓ reduzido (antes 80px) */
 }
 
 /* Cards individuais */
