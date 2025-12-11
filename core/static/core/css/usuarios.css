@@ -4,6 +4,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "poppins", Arial, sans-serif;
+       text-decoration: none;
 }
 
 body {
@@ -71,15 +72,21 @@ body {
     font-weight: normal;
 }
 
-/* REMOVE COR ROXA DOS LINKS */
-a {
-    color: inherit !important;
+
+/* Remover sublinhado apenas dos links dentro do conteúdo */
+.conteudo-principal a {
     text-decoration: none;
+    color: inherit;
 }
 
-a:visited {
-    color: inherit !important;
+
+
+/* Hover apenas no conteúdo, não afeta menus */
+.conteudo-principal a:hover {
+    text-decoration: none;
+    color: #2a5cac;
 }
+
 
 /* Responsividade para Tablets e Telas Médias */
 @media (max-width: 1024px) {

@@ -1,0 +1,45 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrutura de Menus</title>
+    <link rel="stylesheet" href="padrao.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="menu-principal">
+            <img src="Logo_Branca.png" class="logo-menu">
+            <h2>sige</h2>
+
+            <i class="fa-solid fa-bars icone-menu hamburguer" id="menu-toggle"></i>
+
+            <div class="menu-icones">
+                <i class="fa-solid fa-user icone-menu menu-icon-start"></i>
+                <i class="fa-solid fa-right-from-bracket icone-menu"></i>
+            </div>
+        </div>
+
+        <div class="menu-lateral" id="menu-lateral">
+            <nav class="nav-lateral">
+                <a href="#"><i class="fa-solid fa-house" style="color: #ffffff;"></i> Início</a>
+                <a href="#"><i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i> Turmas</a>
+                <a href="#"><i class="fa-solid fa-users" style="color: #ffffff;"></i> Usuários</a>
+                <a href="#"><i class="fa-solid fa-book-open" style="color: #ffffff;"></i> Disciplinas</a>
+            </nav>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleBtn = document.getElementById("menu-toggle");
+            const menuLateral = document.getElementById("menu-lateral");
+
+            toggleBtn.addEventListener("click", () => {
+                menuLateral.classList.toggle("ativo");
+            });
+        });
+    </script>
+</body>

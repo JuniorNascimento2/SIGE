@@ -1,73 +1,113 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Painel do Superusuário{% endblock %}
-{% block header_title %}Painel do Superusuário{% endblock %}
-
-{% block user_info %}
-  <span>Olá, <a href="{% url 'editar_perfil_super' %}" title="Editar Perfil">{{ request.user.get_full_name|default:request.user.username }}</a></span>
-  <a href="{% url 'editar_perfil_super' %}" title="Editar Perfil"><i class="fas fa-user"></i></a>
-  <a href="{% url 'painel_super' %}" title="Voltar" class="btn-voltar"><i class="fas fa-arrow-left"></i></a>
-  <a href="{% url 'logout' %}" title="Sair"><i class="fas fa-power-off"></i></a>
-{% endblock %}
+{% block title %}Docentes{% endblock %}
+{% block header_title %}Docentes{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'core/css/lista_discentes.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/lista_docentes.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+{% endblock %}
+
+{% block user_info %}
+  <span>Olá,
+    <a href="{% url 'editar_perfil' %}">
+      {{ request.user.get_full_name|default:request.user.username }}
+    </a>
+  </span>
+
+  <a href="{% url 'editar_perfil' %}">
+    <i class="fas fa-user"></i>
+  </a>
+
+  <!-- Botão voltar para USUÁRIOS -->
+  <a href="{% url 'usuarios' %}" class="btn-voltar">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+
+  <a href="{% url 'logout' %}">
+    <i class="fas fa-power-off"></i>
+  </a>
 {% endblock %}
 
 {% block content %}
-<div class="container">
 
-  <div class="top-controls">
-    <a href="{% url 'cadastrar_professor' %}">
-      <button class="cadastrar-btn">
-        <i class="fas fa-book"></i>
-        Cadastrar Docente
-      </button>
-    </a>
+<main class="conteudo-principal">
 
-    <form class="buscar-form-container" method="get" action="{% url 'listar_professores' %}">
-      <input type="text" class="buscar-input" name="q" placeholder="Buscar professor..." value="{{ query|default:'' }}">
-      <button type="submit" class="buscar-btn">
-        <i class="fas fa-search"></i>
-      </button>
-    </form>
-  </div>
+    <!-- CABEÇALHO NOVO -->
+    <div class="header-docentes">
 
-  <div class="content-box">
-    <h2 class="titulo">DOCENTES CADASTRADOS</h2>
+        <a href="{% url 'usuarios' %}">
+            <button class="btn-voltar">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </a>
 
-    <table class="tabela-discentes">
-      <thead>
-        <tr class="tabela-principal">
-          <th class="tabela-cabecalho">NOME</th>
-          <th class="tabela-cabecalho">EMAIL</th>
-          <th class="tabela-cabecalho">AÇÕES</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for professor in professores %}
-        <tr class="linhas-tabela">
-          <td class="tabela-info">{{ professor.nome_completo }}</td>
-          <td class="tabela-info">{{ professor.user.email }}</td>
-          <td class="tabela-icones">
-            <a href="{% url 'editar_professor' professor.id %}" class="action-btn editar" title="Editar">
-              <i class="fas fa-pen-to-square"></i>
-            </a>
-            <a href="{% url 'excluir_professor' professor.id %}" class="action-btn deletar" title="Excluir" onclick="return confirm('Deseja excluir este professor?')">
-              <i class="fas fa-trash-can"></i>
-            </a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4" class="tabela-info">Nenhum professor encontrado.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        <h1 class="titulo-pagina">Docentes</h1>
 
-  </div>
-</div>
+        <a href="{% url 'cadastrar_professor' %}">
+            <button class="btn-adicionar">Adicionar Docente</button>
+        </a>
+
+    </div>
+
+    <!-- CARD PRINCIPAL -->
+    <div class="card-tabela">
+
+        <!-- BUSCA -->
+        <div class="barra-busca">
+            <form method="get" action="{% url 'listar_professores' %}" style="width:100%; display:flex;">
+                <input type="text" name="q" placeholder="Buscar docente..." value="{{ query|default:'' }}">
+            </form>
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
+        <!-- TABELA -->
+        <div class="container-tabela">
+
+            <table class="tabela-docentes">
+                <thead>
+                    <tr>
+                        <th class="coluna-nome">Nome</th>
+                        <th class="coluna-email">Email</th>
+                        <th class="coluna-acoes">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for professor in professores %}
+                    <tr>
+                        <td>{{ professor.nome_completo }}</td>
+                        <td>{{ professor.user.email }}</td>
+
+                        <td class="coluna-acoes">
+
+                            <a href="{% url 'editar_professor' professor.id %}">
+                                <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                            </a>
+
+                            <a href="{% url 'excluir_professor' professor.id %}"
+                               onclick="return confirm('Deseja excluir este docente?')">
+                                <i class="fa-solid fa-trash acao-excluir"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align:center; padding:15px;">
+                            Nenhum docente encontrado.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
 {% endblock %}
