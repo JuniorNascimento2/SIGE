@@ -1,30 +1,114 @@
 {% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Gestores{% endblock %}
+{% block header_title %}Gestores{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/lista_docentes.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+{% endblock %}
+
+{% block user_info %}
+  <span>Olá,
+    <a href="{% url 'editar_perfil_super' %}">
+      {{ request.user.get_full_name|default:request.user.username }}
+    </a>
+  </span>
+
+  <a href="{% url 'editar_perfil_super' %}">
+      <i class="fas fa-user"></i>
+  </a>
+
+  <a href="{% url 'usuarios' %}" class="btn-voltar">
+      <i class="fas fa-arrow-left"></i>
+  </a>
+
+  <a href="{% url 'logout' %}">
+      <i class="fas fa-power-off"></i>
+  </a>
+{% endblock %}
 
 {% block content %}
-<h2>Gestores Cadastrados</h2>
-<a href="{% url 'cadastrar_gestor' %}">Cadastrar Novo</a>
 
-<table border="1">
-  <tr>
-    <th>Nome</th>
-    <th>Cargo</th>
-    <th>Email</th>
-    <th>Ações</th>
-  </tr>
+<main class="conteudo-principal">
 
-  {% for gestor in gestores %}
-  <tr>
-    <td>{{ gestor.nome_completo }}</td>
-    <td>{{ gestor.get_cargo_display }}</td>
-    <td>{{ gestor.user.email }}</td>
+    <!-- CABEÇALHO -->
+    <div class="header-docentes">
 
-    <td>
-      {% if user.is_superuser or user.gestor.cargo == 'diretor' or user.gestor.cargo == 'vice_diretor' %}
-        <a href="{% url 'editar_gestor' gestor.id %}">Editar</a> |
-        <a href="{% url 'excluir_gestor' gestor.id %}">Excluir</a>
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+        <a href="{% url 'usuarios' %}">
+            <button class="btn-voltar">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </a>
+
+        <h1 class="titulo-pagina">Gestores</h1>
+
+        {% if user.is_superuser %}
+        <a href="{% url 'cadastrar_gestor' %}">
+            <button class="btn-adicionar">
+                Adicionar Gestor
+            </button>
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- CARD PRINCIPAL -->
+    <div class="card-tabela">
+
+        <!-- TABELA -->
+        <div class="container-tabela">
+
+            <table class="tabela-docentes">
+                <thead>
+                    <tr>
+                        <th class="coluna-nome">Nome</th>
+                        <th class="coluna-email">Cargo</th>
+                        <th class="coluna-email">Email</th>
+                        <th class="coluna-acoes">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for gestor in gestores %}
+                    <tr>
+
+                        <td>{{ gestor.nome_completo }}</td>
+                        <td>{{ gestor.get_cargo_display }}</td>
+                        <td>{{ gestor.user.email }}</td>
+
+                        <td class="coluna-acoes">
+
+                            {% if user.is_superuser or user.gestor.cargo == 'diretor' or user.gestor.cargo == 'vice_diretor' %}
+                            
+                            <a href="{% url 'editar_gestor' gestor.id %}">
+                                <i class="fa-solid fa-pen-to-square acao-editar"></i>
+                            </a>
+
+                            <a href="{% url 'excluir_gestor' gestor.id %}"
+                               onclick="return confirm('Deseja excluir este gestor?')">
+                                <i class="fa-solid fa-trash acao-excluir"></i>
+                            </a>
+
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding:15px;">
+                            Nenhum gestor encontrado.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
 {% endblock %}
