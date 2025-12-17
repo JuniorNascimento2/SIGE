@@ -33,15 +33,15 @@ urlpatterns = [
     path(
     'turmas/<int:turma_id>/disciplinas/',
     views.listar_disciplinas_turma,
-    name='listar_disciplinas_turma'
-),
+    name='listar_disciplinas_turma'),
+    path('disciplina/<int:disciplina_id>/', views.visualizar_disciplinas, name='visualizar_disciplinas'),
 
-# Cadastrar disciplina por turma
-path(
+    # Cadastrar disciplina por turma
+    path(
     'turmas/<int:turma_id>/disciplinas/cadastrar/',
     views.cadastrar_disciplina_para_turma,
     name='cadastrar_disciplina_turma'
-),
+    ),
 
 
     #Turmas
@@ -88,9 +88,6 @@ path(
     path("turmas/<int:turma_id>/grade/", views.grade_horaria, name="grade_horaria"),
 
     path("usuarios/", views.usuarios, name="usuarios"),
-
-
-
 ]
 
 

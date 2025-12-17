@@ -554,7 +554,29 @@ def editar_perfil_aluno(request):
 #Disciplinas
 
 
+@login_required
+def visualizar_disciplinas(request, disciplina_id):
+    if not request.user.is_superuser:
+        return redirect('login')
+    
+    disciplina = get_object_or_404(Disciplina, id=disciplina_id)
+    turma = disciplina.turma
+    alunos = Aluno.objects.filter(turma=turma)
+    notas = Nota.objects.filter(disciplina=disciplina)
+    notas_dict = { 
+        nota.aluno.id: nota
+        for nota in Nota.objects.filter(disciplina=disciplina) 
+        }
 
+    context={
+        "disciplina":disciplina,
+        "turma":turma,
+        "alunos":alunos,
+        "notas":notas,
+        "notas_dict": notas_dict
+    }
+
+    return render(request,'core/visualizar_disciplinas.html', context)
 
 
 
@@ -668,7 +690,6 @@ def excluir_turma(request, turma_id):
     turma = get_object_or_404(Turma, id=turma_id)
     turma.delete()
     return redirect('listar_turmas')
-
 
 
 # PROFESSOR

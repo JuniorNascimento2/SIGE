@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load get_item %}
+
+{% block title %}{{ disciplina.nome }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/visualizar_disciplinas.css' %}">
+{% endblock %}
+{% block content %}
+<main class="detalhes">
+    <div class="header-detalhes">
+        <a class="voltar" href="{% url 'listar_disciplinas_turma' disciplina.turma.id %}">
+            <i class="fas fa-arrow-left"></i> 
+        </a>
+        <h2 class="titulo">{{disciplina.nome}}</h2>
+        <a href="#" class="imprimir">Imprimir 
+            <i class="fas fa-print"></i>
+        </a>
+    </div>
+    <div class="prof">
+        <div class="info">
+            <p>Turno: {{ turma.turno}}</p>
+            {% if disciplina.professor %}
+                <p>Professor(a): {{ disciplina.professor.nome_completo }}</p>
+            {% else %}
+                <p><strong>Professor:</strong> Não atribuído</p>
+            {% endif %}
+        </div>
+        <div class="botoes">
+            <a class="nota" href="{% url 'lancar_nota' disciplina.id %}">Notas</a>
+            <a class="disciplina" href="">Frequência</a>
+        </div>
+    </div>
+    <div class="tabela">  
+        <table class="tabela-notas">
+            <thead>
+                <tr>
+                    <th class="nome">Nome</th>
+                    <th class="bim1">1ºBimestre</th>
+                    <th class="bim2">2ºBimestre</th>
+                    <th class="bim3">3ºBimestre</th>
+                    <th class="bim4">4ºBimestre</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in alunos %}
+                    {% with nota=notas_dict|get_item:aluno.id %}
+                        <tr>
+                            <td>{{ aluno.nome_completo }}</td>
+                            {% if nota %}
+                                <td>{{ nota.nota1|default_if_none:"-" }}</td>
+                                <td>{{ nota.nota2|default_if_none:"-"  }}</td>
+                                <td>{{ nota.nota3|default_if_none:"-"  }}</td>
+                                <td>{{ nota.nota4|default_if_none:"-" }}</td>
+                             {% else %}
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                    {% endwith %}  
+                {% empty %}
+                    <tr>
+                        <td colspan="5">Nenhum aluno cadastrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+    document.querySelector('.imprimir')
+  .addEventListener('click', e => {
+    e.preventDefault();
+    window.print();
+  });
+</script>
+{% endblock %}

@@ -19,7 +19,7 @@
 
   <!-- Topo -->
   <div class="top-controls">
-
+    
     <!-- Editar turma -->
     <a href="{% url 'editar_turma' turma.id %}">
       <button class="cadastrar-btn" style="background:#1e90ff">
@@ -88,7 +88,8 @@
           <td class="tabela-info">{{ disciplina.professor.nome_completo }}</td>
 
           <td class="tabela-icones">
-
+            <a href="{% url 'visualizar_disciplinas' disciplina.id %}" class="acao-btn view" title="Visualizar"><i class="fa-solid fa-eye"></i>
+            </a>
             <a href="{% url 'editar_disciplina' disciplina.id %}" class="action-btn editar" title="Editar">
               <i class="fas fa-pen-to-square"></i>
             </a>
