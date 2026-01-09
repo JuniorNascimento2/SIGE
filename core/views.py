@@ -513,7 +513,7 @@ def editar_gestor(request, gestor_id):
         return redirect('painel_super')
 
     if request.method == 'POST':
-        form = GestorForm(request.POST, instance=gestor, request=request)
+        form = GestorForm(request.POST,request.FILES, instance=gestor, request=request)
         if form.is_valid():
             form.save()
 

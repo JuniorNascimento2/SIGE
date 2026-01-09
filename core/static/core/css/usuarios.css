@@ -4,7 +4,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "poppins", Arial, sans-serif;
-       text-decoration: none;
+    text-decoration: none;
 }
 
 body {
@@ -13,38 +13,53 @@ body {
     overflow-x: hidden;
 }
 
-/* Conteúdo Rolável da Página */
-/*main {
+/* ===============================
+   CONTEÚDO PRINCIPAL (AJUSTE 🔥)
+================================ */
+.conteudo-principal-rolavel {
+    display: flex;
+    justify-content: center;   /* 🔥 centraliza o painel */
+    width: 100%;
+    padding: 20px;
+}
 
-}*/
+/* Painel centralizado */
+.painel-usuarios {
+    width: 100%;
+    max-width: 1200px;
+}
 
+/* ===============================
+   TÍTULO
+================================ */
 .titulo-painel {
     font-size: 2.8rem;
     color: #1b263b;
     margin-bottom: 20px;
     text-align: center;
     font-weight: normal;
-    margin-top: 20px; /* ↓ reduzido (antes 80px) */
+    margin-top: 20px;
     letter-spacing: 0.1em;
 }
 
-/* Cards container */
+/* ===============================
+   CARDS
+================================ */
 .cards-total {
     display: flex;
     gap: 20px; 
     justify-content: center;
     flex-wrap: wrap; 
     padding: 10px 0;
-    margin-top: 100px; /* ↓ reduzido (antes 80px) */
+    margin-top: 100px;
 }
 
-/* Cards individuais */
 .card-usuario {
     background-color: #f6f7fb; 
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     padding: 30px 30px;
-    width: 300px;   /* ↓ menor para caber lado a lado */
+    width: 300px;
     height: 180px;
     display: flex;
     flex-direction: column;
@@ -72,23 +87,22 @@ body {
     font-weight: normal;
 }
 
-
-/* Remover sublinhado apenas dos links dentro do conteúdo */
+/* ===============================
+   LINKS
+================================ */
 .conteudo-principal a {
     text-decoration: none;
     color: inherit;
 }
 
-
-
-/* Hover apenas no conteúdo, não afeta menus */
 .conteudo-principal a:hover {
     text-decoration: none;
     color: #2a5cac;
 }
 
-
-/* Responsividade para Tablets e Telas Médias */
+/* ===============================
+   RESPONSIVIDADE
+================================ */
 @media (max-width: 1024px) {
     .menu-lateral {
         width: 180px;
@@ -99,7 +113,6 @@ body {
     }
 }
 
-/* Responsividade para Celular */
 @media (max-width: 768px) {
 
     .menu-principal h2 {
@@ -130,6 +143,10 @@ body {
         padding: 15px;
     }
 
+    .conteudo-principal-rolavel {
+        padding: 10px;
+    }
+
     .cards-total {
         flex-direction: column;
         align-items: center;
@@ -152,7 +169,6 @@ body {
     }
 }
 
-/* Celulares pequenos */
 @media (max-width: 480px) {
     .menu-principal {
         padding: 0 10px;
@@ -160,5 +176,35 @@ body {
 
     .menu-principal h2 {
         font-size: 1rem;
+    }
+}
+
+/* ===============================
+   CENTRALIZAÇÃO REAL DOS CARDS
+================================ */
+
+/* Garante que o conteúdo fique centralizado visualmente */
+.painel-usuarios {
+    max-width: 1100px;          /* controla a largura do conteúdo */
+    margin: 0 auto;             /* centraliza de verdade */
+    padding: 0 20px;
+}
+
+/* Centraliza o título em relação aos cards */
+.titulo-painel {
+    text-align: center;
+}
+
+/* Cards continuam flex, mas agora dentro de um container central */
+.cards-total {
+    justify-content: center;
+}
+
+
+/* Em telas menores, remove compensação */
+@media (max-width: 768px) {
+    main.conteudo-principal-rolavel {
+        width: 100% !important;
+        margin-left: 0 !important;
     }
 }

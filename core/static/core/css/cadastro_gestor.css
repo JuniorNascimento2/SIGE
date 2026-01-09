@@ -1,119 +1,5 @@
-/* Configuração Geral da Página */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', Arial, sans-serif;
-}
 
-body {
-    background-color: #f6f7fb;
-    color: #333;
-    overflow-x: hidden;
-}
 
-/* 1. LAYOUT PRINCIPAL E MENU TOPO */
-/* ---------------------------------- */
-
-.menu-principal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background-color: #0d1b2a;
-    height: 60px;
-    color: #fff;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid #f6f7fb;
-}
-
-.menu-principal .logo-menu {
-    height: 70px;
-    width: auto;
-}
-
-.menu-principal h2 {
-    margin: 0;
-    font-size: 20pt;
-    font-weight: normal;
-    text-transform: uppercase;
-    letter-spacing: 0.2rem;
-}
-
-.menu-principal .menu-icon-start {
-    margin-right: 10px;
-    background: #a2a5aa;
-    padding: 8px;
-    border-radius: 100px;
-}
-
-.menu-principal .icone-menu {
-    font-size: 20pt;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.menu-principal .icone-menu:hover {
-    transform: scale(1.1);
-}
-
-/* Hamburguer para responsividade */
-.hamburguer {
-    display: none !important;
-}
-
-/* Icones user e sair */
-.menu-icones {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* 2. MENU LATERAL */
-
-.menu-lateral {
-    position: fixed;
-    top: 60px;
-    left: 0;
-    bottom: 0;
-    z-index: 900;
-    background: #0d1b2a;
-    color: #fff;
-    width: 220px;
-    padding: 25px 15px;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-}
-
-.nav-lateral {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-}
-
-.nav-lateral a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #ddd;
-    text-decoration: none;
-    padding: 18px 15px;
-    border-radius: 8px;
-    transition: background 0.3s;
-    font-size: 15pt;
-    margin-bottom: 15px;
-}
-
-.nav-lateral a:hover,
-.nav-lateral a.ativo-menu {
-    background: #1b263b;
-}
 
 /* 3. ÁREA PRINCIPAL E FORMULÁRIO */
 main {
@@ -622,7 +508,24 @@ label.required::after {
 /* Esconde o input original */
 .botao-upload input[type="file"] { display: none !important; }
 
+/* ================= FOTO DE PERFIL ================= */
+
+.preview-foto {
+    margin: 20px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;              /* 🔥 corta certinho */
+    border: 3px solid #4f8ef7;     /* azul bonito */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f2f4f8;
+}
+
 .preview-foto img {
-    max-width: 140px; border-radius: 50%; object-fit: cover;
-    margin-top: 15px; border: 3px solid #4a90e2; display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;             /* 🔥 mantém proporção */
+    border-radius: 50%;
 }

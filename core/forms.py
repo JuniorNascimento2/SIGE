@@ -287,7 +287,6 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from .models import Gestor
 
-
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
@@ -304,13 +303,13 @@ class GestorForm(forms.ModelForm):
     )
 
     senha = forms.CharField(
-        required=True,
+        required=False,  # 🔥 NÃO OBRIGATÓRIA NA EDIÇÃO
         label="Senha",
         widget=forms.PasswordInput(render_value=False)
     )
 
     senha_confirmacao = forms.CharField(
-        required=True,
+        required=False,  # 🔥 NÃO OBRIGATÓRIA NA EDIÇÃO
         label="Confirmar senha",
         widget=forms.PasswordInput(render_value=False)
     )
@@ -322,12 +321,12 @@ class GestorForm(forms.ModelForm):
             'cpf',
             'data_nascimento',
             'telefone',
-            'cep',        # 🔥 ADICIONADO
+            'cep',
             'uf',
             'cidade',
             'endereco',
             'cargo',
-            'foto',       # 📸 OPCIONAL
+            'foto',
         ]
 
         widgets = {
@@ -338,14 +337,22 @@ class GestorForm(forms.ModelForm):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
 
-        # 🔒 TODOS OS CAMPOS OBRIGATÓRIOS
+        # 🔒 TODOS OBRIGATÓRIOS
         for field in self.fields.values():
             field.required = True
 
-        # 📸 FOTO NÃO É OBRIGATÓRIA
+        # 📸 FOTO NÃO OBRIGATÓRIA
         self.fields['foto'].required = False
 
-        # Se estiver editando, carrega e-mail do user
+        # 🔑 SENHA SÓ É OBRIGATÓRIA NO CADASTRO
+        if self.instance.pk:
+            self.fields['senha'].required = False
+            self.fields['senha_confirmacao'].required = False
+        else:
+            self.fields['senha'].required = True
+            self.fields['senha_confirmacao'].required = True
+
+        # 📧 carregar e-mail do usuário na edição
         if self.instance.pk and hasattr(self.instance, 'user') and self.instance.user:
             self.fields['email'].initial = self.instance.user.email
 
@@ -356,12 +363,9 @@ class GestorForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
 
-        if not email:
-            raise ValidationError("O e-mail é obrigatório.")
-
         qs = User.objects.filter(email=email)
 
-        if self.instance.pk and hasattr(self.instance, 'user') and self.instance.user:
+        if self.instance.pk and hasattr(self.instance, 'user'):
             qs = qs.exclude(pk=self.instance.user.pk)
 
         if qs.exists():
@@ -371,9 +375,6 @@ class GestorForm(forms.ModelForm):
 
     def clean_cpf(self):
         cpf = self.cleaned_data.get('cpf')
-
-        if not cpf:
-            raise ValidationError("O CPF é obrigatório.")
 
         qs = Gestor.objects.filter(cpf=cpf)
 
@@ -387,10 +388,6 @@ class GestorForm(forms.ModelForm):
 
     def clean_cep(self):
         cep = self.cleaned_data.get('cep')
-
-        if not cep:
-            raise ValidationError("O CEP é obrigatório.")
-
         cep_numeros = cep.replace('-', '')
 
         if len(cep_numeros) != 8 or not cep_numeros.isdigit():
@@ -408,8 +405,13 @@ class GestorForm(forms.ModelForm):
         senha = cleaned_data.get('senha')
         senha_confirmacao = cleaned_data.get('senha_confirmacao')
 
+        # 👉 não quer trocar senha → OK
+        if not senha and not senha_confirmacao:
+            return cleaned_data
+
+        # 👉 digitou um → precisa dos dois
         if not senha or not senha_confirmacao:
-            raise ValidationError("Senha e confirmação são obrigatórias.")
+            raise ValidationError("Informe a senha e a confirmação.")
 
         if senha != senha_confirmacao:
             raise ValidationError("As senhas não coincidem.")
@@ -431,20 +433,21 @@ class GestorForm(forms.ModelForm):
         if gestor.user:
             gestor.user.email = email
             gestor.user.username = email
-            gestor.user.set_password(senha)
+
+            # 🔥 só troca senha se digitou
+            if senha:
+                gestor.user.set_password(senha)
 
             if commit:
                 gestor.user.save()
 
-                # mantém sessão ativa se for edição
-                if self.request:
+                if self.request and senha:
                     update_session_auth_hash(self.request, gestor.user)
 
         if commit:
             gestor.save()
 
         return gestor
-
 
 
 class DisciplinaForm(forms.ModelForm):

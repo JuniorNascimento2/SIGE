@@ -131,7 +131,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+from django.db import models
+from django.contrib.auth.models import User
+
+
 class Gestor(models.Model):
+
+    # ------------------ CARGOS ------------------
     CARGO_CHOICES = [
         ('diretor', 'Diretor'),
         ('vice_diretor', 'Vice-Diretor'),
@@ -139,23 +145,34 @@ class Gestor(models.Model):
         ('coordenador', 'Coordenador'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nome_completo = models.CharField(max_length=150)
+    # ------------------ UFs ------------------
+    UF_CHOICES = [
+        ("AC", "AC"), ("AL", "AL"), ("AP", "AP"), ("AM", "AM"),
+        ("BA", "BA"), ("CE", "CE"), ("DF", "DF"), ("ES", "ES"),
+        ("GO", "GO"), ("MA", "MA"), ("MT", "MT"), ("MS", "MS"),
+        ("MG", "MG"), ("PA", "PA"), ("PB", "PB"), ("PR", "PR"),
+        ("PE", "PE"), ("PI", "PI"), ("RJ", "RJ"), ("RN", "RN"),
+        ("RS", "RS"), ("RO", "RO"), ("RR", "RR"), ("SC", "SC"),
+        ("SP", "SP"), ("SE", "SE"), ("TO", "TO"),
+    ]
 
-    # ➕ DADOS PESSOAIS
+    # ------------------ RELAÇÃO COM USUÁRIO ------------------
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    # ------------------ DADOS PESSOAIS ------------------
+    nome_completo = models.CharField(max_length=150)
     cpf = models.CharField(max_length=14, unique=True)
     data_nascimento = models.DateField()
     telefone = models.CharField(max_length=20)
-
     cargo = models.CharField(max_length=20, choices=CARGO_CHOICES)
 
-    # ➕ ENDEREÇO SIMPLIFICADO
+    # ------------------ ENDEREÇO ------------------
     cep = models.CharField(max_length=9)  # 00000-000
-    uf = models.CharField(max_length=2)
+    uf = models.CharField(max_length=2, choices=UF_CHOICES)
     cidade = models.CharField(max_length=100)
     endereco = models.CharField(max_length=255)
 
-    # 📸 FOTO DE PERFIL (opcional)
+    # ------------------ FOTO ------------------
     foto = models.ImageField(upload_to="fotos/", null=True, blank=True)
 
     def __str__(self):
@@ -169,4 +186,5 @@ class GradeHorario(models.Model):
 
     def __str__(self):
         return f"Grade Horária - {self.turma}"
+
 

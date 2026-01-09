@@ -1,14 +1,285 @@
 {% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Editar Gestor{% endblock %}
+{% block header_title %}Editar Gestor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/cadastro_gestor.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
 <div class="container">
-  <h2>Editar Gestor: {{ gestor.nome_completo }}</h2>
+    <main>
+        <div class="topo-formulario">
+            <h1>Editar Gestor</h1>
+        </div>
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salvar Alterações</button>
-    <a href="{% url 'listar_gestores' %}">Cancelar</a>
-  </form>
+        <div class="conteudo-principal-rolavel">
+
+            <form method="POST" class="formulario" enctype="multipart/form-data" id="form-gestor">
+                {% csrf_token %}
+
+                <!-- DADOS PESSOAIS -->
+                <div class="etapa ativa">
+                    <div class="caixa-texto">
+                        <label class="required">Nome completo</label>
+                        <input type="text" name="nome_completo"
+                               value="{{ form.nome_completo.value|default_if_none:'' }}" required>
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label class="required">CPF</label>
+                        <input type="text" name="cpf" id="cpf" maxlength="14"
+                               value="{{ form.cpf.value|default_if_none:'' }}" required>
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label class="required">Data de nascimento</label>
+                        <input type="date" name="data_nascimento"
+                                value="{{ form.data_nascimento.value|date:'Y-m-d' }}" required>
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label class="required">Telefone</label>
+                        <input type="tel" name="telefone" id="telefone" maxlength="15"
+                               value="{{ form.telefone.value|default_if_none:'' }}" required>
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label class="required">E-mail</label>
+                        <input type="email" name="email"
+                               value="{{ form.email.value|default_if_none:'' }}" required>
+                        <small class="erro-inline"></small>
+                    </div>
+                </div>
+
+                <!-- ENDEREÇO -->
+                <div class="etapa ativa">
+                    <div class="caixa-texto">
+                        <label class="required">CEP</label>
+                        <input type="text" name="cep" id="cep" maxlength="9"
+                               value="{{ form.cep.value|default_if_none:'' }}" required>
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label class="required">UF</label>
+                        <select name="uf" id="uf" required>
+                            <option value="">Selecione a UF</option>
+                            <option value="AL" {% if form.uf.value == "AL" %}selected{% endif %}>AL</option>
+                            <option value="AP" {% if form.uf.value == "AP" %}selected{% endif %}>AP</option>
+                            <option value="AM" {% if form.uf.value == "AM" %}selected{% endif %}>AM</option>
+                            <option value="BA" {% if form.uf.value == "BA" %}selected{% endif %}>BA</option>
+                            <option value="CE" {% if form.uf.value == "CE" %}selected{% endif %}>CE</option>
+                            <option value="DF" {% if form.uf.value == "DF" %}selected{% endif %}>DF</option>
+                            <option value="ES" {% if form.uf.value == "ES" %}selected{% endif %}>ES</option>
+                            <option value="GO" {% if form.uf.value == "GO" %}selected{% endif %}>GO</option>
+                            <option value="MA" {% if form.uf.value == "MA" %}selected{% endif %}>MA</option>
+                            <option value="MT" {% if form.uf.value == "MT" %}selected{% endif %}>MT</option>
+                            <option value="MS" {% if form.uf.value == "MS" %}selected{% endif %}>MS</option>
+                            <option value="MG" {% if form.uf.value == "MG" %}selected{% endif %}>MG</option>
+                            <option value="PA" {% if form.uf.value == "PA" %}selected{% endif %}>PA</option>
+                            <option value="PB" {% if form.uf.value == "PB" %}selected{% endif %}>PB</option>
+                            <option value="PR" {% if form.uf.value == "PR" %}selected{% endif %}>PR</option>
+                            <option value="PE" {% if form.uf.value == "PE" %}selected{% endif %}>PE</option>
+                            <option value="PI" {% if form.uf.value == "PI" %}selected{% endif %}>PI</option>
+                            <option value="RJ" {% if form.uf.value == "RJ" %}selected{% endif %}>RJ</option>
+                            <option value="RN" {% if form.uf.value == "RN" %}selected{% endif %}>RN</option>
+                            <option value="RS" {% if form.uf.value == "RS" %}selected{% endif %}>RS</option>
+                            <option value="RO" {% if form.uf.value == "RO" %}selected{% endif %}>RO</option>
+                            <option value="RR" {% if form.uf.value == "RR" %}selected{% endif %}>RR</option>
+                            <option value="SC" {% if form.uf.value == "SC" %}selected{% endif %}>SC</option>
+                            <option value="SP" {% if form.uf.value == "SP" %}selected{% endif %}>SP</option>
+                            <option value="SE" {% if form.uf.value == "SE" %}selected{% endif %}>SE</option>
+                            <option value="TO" {% if form.uf.value == "TO" %}selected{% endif %}>TO</option>
+
+                        </select>
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label class="required">Cidade</label>
+                        <input type="text" name="cidade" id="cidade"
+                               value="{{ form.cidade.value|default_if_none:'' }}" required>
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label class="required">Endereço</label>
+                        <input type="text" name="endereco"
+                               value="{{ form.endereco.value|default_if_none:'' }}" required>
+                        <small class="erro-inline"></small>
+                    </div>
+                </div>
+
+                <!-- CARGO / SENHA -->
+                <div class="etapa ativa">
+                    <div class="caixa-texto">
+                        <label class="required">Cargo</label>
+                        <select name="cargo" required>
+                            <option value="">Selecione</option>
+                            <option value="diretor" {% if form.cargo.value == "diretor" %}selected{% endif %}>Diretor</option>
+                            <option value="vice_diretor" {% if form.cargo.value == "vice_diretor" %}selected{% endif %}>Vice-Diretor</option>
+                            <option value="secretario" {% if form.cargo.value == "secretario" %}selected{% endif %}>Secretário</option>
+                            <option value="coordenador" {% if form.cargo.value == "coordenador" %}selected{% endif %}>Coordenador</option>
+                        </select>
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label>Nova senha (opcional)</label>
+                        <input type="password" name="senha" id="senha">
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="requisitos-senha">
+                        <div class="requisito" id="req-maiuscula"><i class="fa-solid fa-xmark"></i> Pelo menos 1 letra maiúscula</div>
+                        <div class="requisito" id="req-minuscula"><i class="fa-solid fa-xmark"></i> Pelo menos 1 letra minúscula</div>
+                        <div class="requisito" id="req-numero"><i class="fa-solid fa-xmark"></i> Pelo menos 1 número</div>
+                        <div class="requisito" id="req-caractere"><i class="fa-solid fa-xmark"></i> Pelo menos 8 caracteres</div>
+                    </div>
+
+                    <div class="caixa-texto">
+                        <label>Confirmar nova senha</label>
+                        <input type="password" name="senha_confirmacao" id="senha_confirmacao">
+                        <small class="erro-inline"></small>
+                    </div>
+
+                    <div class="confirmacao-senha" id="senha-match-msg"></div>
+
+                    <div class="caixa-texto upload-foto">
+                        <label>Foto de Perfil</label>
+                        <div class="upload-container">
+                            <label class="botao-upload">
+                                <i class="fa-solid fa-camera"></i>
+                                <span>Selecionar Imagem</span>
+                                <input type="file" name="foto" accept="image/*" onchange="previewFoto(this)">
+                            </label>
+                            <div class="preview-foto">
+                                <img id="preview-imagem" src="{% if gestor.foto %}{{ gestor.foto.url }}{% endif %}" alt="Pré-visualização">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="botoes">
+                        <button type="submit" class="btn">Salvar Alterações</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </main>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* ================== MÁSCARAS ================== */
+document.getElementById('cpf')?.addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,11);
+    v = v.replace(/(\d{3})(\d)/,'$1.$2')
+         .replace(/(\d{3})(\d)/,'$1.$2')
+         .replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+    e.target.value = v;
+});
+
+document.getElementById('telefone')?.addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,11);
+    v = v.length > 10
+        ? v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3')
+        : v.replace(/(\d{2})(\d{4})(\d{4})/,'($1) $2-$3');
+    e.target.value = v;
+});
+
+document.getElementById('cep')?.addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,8);
+    e.target.value = v.replace(/(\d{5})(\d)/,'$1-$2');
+});
+
+/* ================== PREVIEW DE FOTO ================== */
+function previewFoto(input) {
+    const img = document.getElementById('preview-imagem');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            img.src = e.target.result;
+            img.style.display = "block";
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+/* ================== VALIDAÇÃO DE SENHA ================== */
+const senha = document.getElementById('senha');
+const senhaConfirm = document.getElementById('senha_confirmacao');
+const senhaMatchMsg = document.getElementById('senha-match-msg');
+
+const regras = [
+    { id: 'req-maiuscula', regex: /[A-Z]/ },
+    { id: 'req-minuscula', regex: /[a-z]/ },
+    { id: 'req-numero', regex: /\d/ },
+    { id: 'req-caractere', regex: /.{8,}/ }
+];
+
+senha?.addEventListener('input', () => {
+    const val = senha.value;
+
+    regras.forEach(r => {
+        const el = document.getElementById(r.id);
+        if (!el) return;
+
+        if (r.regex.test(val)) {
+            el.classList.add('valid');
+            el.querySelector('i').className = 'fa-solid fa-check';
+        } else {
+            el.classList.remove('valid');
+            el.querySelector('i').className = 'fa-solid fa-xmark';
+        }
+    });
+
+    verificarSenhaConfirm();
+});
+
+senhaConfirm?.addEventListener('input', verificarSenhaConfirm);
+
+function verificarSenhaConfirm() {
+    if (!senhaConfirm.value) {
+        senhaMatchMsg.style.display = "none";
+        return;
+    }
+
+    if (senha.value === senhaConfirm.value) {
+        senhaMatchMsg.innerText = "Senhas coincidem";
+        senhaMatchMsg.classList.add('valid');
+    } else {
+        senhaMatchMsg.innerText = "As senhas não coincidem";
+        senhaMatchMsg.classList.remove('valid');
+    }
+
+    senhaMatchMsg.style.display = "block";
+}
+
+/* ================== VIA CEP ================== */
+document.getElementById('cep')?.addEventListener('blur', function () {
+    let cep = this.value.replace(/\D/g,'');
+    if (cep.length !== 8) return;
+
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.erro) return;
+
+            document.getElementById('uf').value = data.uf;
+            document.getElementById('cidade').value = data.localidade;
+        })
+        .catch(() => {});
+});
+</script>
 {% endblock %}
