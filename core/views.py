@@ -6,7 +6,7 @@ from django.contrib import messages
 from .models import Professor, Aluno, Disciplina, Turma, Nota, Gestor
 from .forms import (
     LoginForm, ProfessorForm, AlunoForm, DisciplinaForm, TurmaForm,
-    NotaForm, EditarPerfilForm, EditarPerfilProfessorForm, EditarPerfilAlunoForm, GestorForm
+    NotaForm, EditarPerfilForm, GestorForm
 )
 
 # -------------------- LOGIN / LOGOUT --------------------
@@ -323,26 +323,22 @@ def cadastrar_professor(request):
 @user_passes_test(is_superuser)
 def editar_professor(request, professor_id):
     professor = get_object_or_404(Professor, id=professor_id)
+    
     if request.method == 'POST':
-        nome_completo = request.POST.get('nome_completo', '').strip()
-        email = request.POST.get('email', '').strip()
-        senha = request.POST.get('senha', '').strip()
-
-        if not nome_completo or not email:
-            messages.error(request, 'Preencha os campos obrigatórios.')
-        else:
-            user = professor.user
-            user.email = email
-            user.username = email
-            if senha:
-                user.set_password(senha)
-            user.save()
-            professor.nome_completo = nome_completo
-            professor.save()
-            messages.success(request, 'Professor atualizado com sucesso!')
+        form = ProfessorForm(request.POST, request.FILES, instance=professor, request=request)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Professor(a) {professor.nome_completo} atualizado(a) com sucesso!')
             return redirect('listar_professores')
+        else:
+            for campo, erros in form.errors.items():
+                for erro in erros:
+                    messages.error(request, erro)
+    else:
+        form = ProfessorForm(instance=professor, request=request)
 
-    return render(request, 'core/editar_professor.html', {'professor': professor})
+    return render(request, 'core/cadastrar_professor.html', {'form': form, 'professor': professor})
 
 
 @login_required
@@ -454,7 +450,7 @@ def editar_gestor(request, gestor_id):
     else:
         form = GestorForm(instance=gestor, initial={'email': user.email})
 
-    return render(request, 'core/editar_gestor.html', {'form': form, 'gestor': gestor})
+    return render(request, 'core/cadastrar_gestor.html', {'form': form, 'gestor': gestor})
 
 
 
@@ -495,32 +491,33 @@ def cadastrar_aluno(request):
 @user_passes_test(is_superuser)
 def editar_aluno(request, aluno_id):
     aluno = get_object_or_404(Aluno, id=aluno_id)
+
     if request.method == 'POST':
-        nome_completo = request.POST.get('nome_completo', '').strip()
-        idade = request.POST.get('idade', '').strip()
-        email = request.POST.get('email', '').strip()
-        turma_id = request.POST.get('turma')
-        senha = request.POST.get('senha', '').strip()
+        form = AlunoForm(
+            request.POST,
+            request.FILES,
+            instance=aluno,
+            request=request
+        )
 
-        if not nome_completo or not idade or not email or not turma_id:
-            messages.error(request, 'Preencha os campos obrigatórios.')
-        else:
-            user = aluno.user
-            user.email = email
-            user.username = email
-            if senha:
-                user.set_password(senha)
-            user.save()
-
-            aluno.nome_completo = nome_completo
-            aluno.idade = idade
-            aluno.turma = get_object_or_404(Turma, id=turma_id)
-            aluno.save()
-            messages.success(request, 'Aluno atualizado com sucesso!')
+        if form.is_valid():
+            aluno = form.save()
+            messages.success(
+                request,
+                f"Aluno(a) {aluno.nome_completo} atualizado(a) com sucesso!"
+            )
             return redirect('listar_alunos')
+        else:
+            for campo, erros in form.errors.items():
+                for erro in erros:
+                    messages.error(request, erro)
+    else:
+        form = AlunoForm(instance=aluno, request=request)
 
-    turmas = Turma.objects.all()
-    return render(request, 'core/editar_aluno.html', {'aluno': aluno, 'turmas': turmas})
+    return render(request, 'core/cadastrar_aluno.html', {
+        'form': form,
+        'aluno': aluno
+    })
 
 
 @login_required
@@ -535,36 +532,7 @@ def excluir_aluno(request, aluno_id):
 
 
 
-# -------------------- PERFIL ALUNO --------------------
-@login_required
-def editar_perfil_aluno(request):
-    if not hasattr(request.user, 'aluno'):
-        return redirect('login')
 
-    aluno = request.user.aluno
-    user = request.user
-
-    if request.method == 'POST':
-        nome_completo = request.POST.get('nome_completo', '').strip()
-        email = request.POST.get('email', '').strip()
-        nova_senha = request.POST.get('nova_senha', '').strip()
-
-        if not nome_completo or not email:
-            messages.error(request, 'Preencha todos os campos obrigatórios.')
-        else:
-            aluno.nome_completo = nome_completo
-            aluno.save()
-
-            user.email = email
-            user.username = email
-            if nova_senha:
-                user.set_password(nova_senha)
-            user.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, 'Perfil atualizado com sucesso.')
-            return redirect('painel_aluno')
-
-    return render(request, 'core/editar_perfil_aluno.html', {'aluno': aluno})
 
 
 # -------------------- DISCIPLINAS, TURMAS E NOTAS --------------------
@@ -798,64 +766,63 @@ def painel_professor(request):
 
     
 
-@login_required
-def editar_perfil_professor(request):
-    user = request.user
 
-    if request.method == 'POST':
-        form = EditarPerfilProfessorForm(request.POST, instance=user)
 
-        if form.is_valid():
-            nova_senha = form.cleaned_data.get('nova_senha')
 
-            form.save()  # salva nome, sobrenome, email, etc.
-
-            if nova_senha:  # só altera a senha se foi preenchida
-                user.set_password(nova_senha)
-                user.save()
-                update_session_auth_hash(request, user)  # mantém login ativo
-            return redirect('painel_professor')
-    else:
-        form = EditarPerfilProfessorForm(instance=user)
-
-    return render(request, 'core/editar_perfil_professor.html', {'form': form})
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
 @login_required
 def lancar_nota(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, id=disciplina_id)
-    alunos = Aluno.objects.filter(turma=disciplina.turma)
+
+    # FORÇA queryset de MODEL (sem values)
+    alunos = Aluno.objects.filter(turma_id=disciplina.turma_id).order_by('nome_completo')
+
+    # DEBUG no terminal (pra provar que tem id)
+    if alunos.exists():
+        a0 = alunos.first()
+        print("DEBUG ALUNO:", type(a0), "id=", a0.id, "pk=", a0.pk, "nome=", a0.nome_completo)
 
     if request.method == 'POST':
         for aluno in alunos:
-            nota_obj, _ = Nota.objects.get_or_create(aluno=aluno, disciplina=disciplina)
+            nota_obj, _ = Nota.objects.get_or_create(
+                aluno_id=aluno.pk,
+                disciplina_id=disciplina.id
+            )
 
             for i in range(1, 5):
-                campo = f'nota{i}_{aluno.id}'
-                valor_str = request.POST.get(campo)
-                if valor_str and valor_str.strip() != '':
-                    try:
-                        valor = float(valor_str)
-                        if 0 <= valor <= 10:
-                            setattr(nota_obj, f'nota{i}', valor)
-                    except ValueError:
-                        pass
-                # Se o campo veio vazio ou não existe, não altera o campo para manter a nota antiga
+                campo = f'nota{i}_{aluno.pk}'
+                valor = request.POST.get(campo, '').strip()
+
+                if valor == '':
+                    continue
+
+                try:
+                    valor_float = float(valor.replace(',', '.'))
+                except ValueError:
+                    messages.error(request, f'Nota inválida: "{valor}" para {aluno.nome_completo} (B{i}).')
+                    continue
+
+                setattr(nota_obj, f'nota{i}', valor_float)
 
             nota_obj.save()
 
-        # Fica na mesma página após salvar
-        return redirect(request.path)
+        messages.success(request, 'Notas salvas com sucesso!')
+        return redirect('lancar_nota', disciplina_id=disciplina.id)
 
-    notas_dict = {}
-    for aluno in alunos:
-        nota_obj = Nota.objects.filter(aluno=aluno, disciplina=disciplina).first()
-        notas_dict[aluno.id] = nota_obj
+    notas_dict = {n.aluno_id: n for n in Nota.objects.filter(disciplina_id=disciplina.id)}
 
-    return render(request, 'core/lancar_nota.html', {'disciplina': disciplina, 'alunos': alunos, 'notas_dict': notas_dict})
+    return render(request, 'core/lancar_nota.html', {
+        'disciplina': disciplina,
+        'alunos': alunos,
+        'notas_dict': notas_dict,
+    })
 
 
 
-# ALUNO
+
 # ALUNO
 @login_required
 def painel_aluno(request):

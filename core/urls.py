@@ -13,7 +13,6 @@ urlpatterns = [
     #Docentes
     path('professores/', views.listar_professores, name='listar_professores'),
     path('professores/cadastrar/', views.cadastrar_professor, name='cadastrar_professor'),
-    path('editar/perfil/professor/', views.editar_perfil_professor, name='editar_perfil_professor'),
     path('professores/editar/<int:professor_id>/', views.editar_professor, name='editar_professor'),
     path('professores/excluir/<int:professor_id>/', views.excluir_professor, name='excluir_professor'),
     path('painel/professor/', views.painel_professor, name='painel_professor'),
@@ -22,7 +21,7 @@ urlpatterns = [
 
     #Discentes
     path('alunos/', views.listar_alunos, name='listar_alunos'),
-    path('editar/perfil/aluno/', views.editar_perfil_aluno, name='editar_perfil_aluno'),
+    
     path('alunos/cadastrar/', views.cadastrar_aluno, name='cadastrar_aluno'),
     path('alunos/editar/<int:aluno_id>/', views.editar_aluno, name='editar_aluno'),
     path('alunos/excluir/<int:aluno_id>/', views.excluir_aluno, name='excluir_aluno'),

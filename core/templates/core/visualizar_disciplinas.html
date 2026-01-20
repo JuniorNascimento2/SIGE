@@ -20,7 +20,8 @@
     </div>
     <div class="prof">
         <div class="info">
-            <p>Turno: {{ turma.turno}}</p>
+            <p>Turno: {{ disciplina.turma.turno }}</p>
+
             {% if disciplina.professor %}
                 <p>Professor(a): {{ disciplina.professor.nome_completo }}</p>
             {% else %}

@@ -1,104 +1,110 @@
 {% extends 'core/base.html' %}
-{% load custom_tags %}
 {% load static %}
+{% load get_item %}
+{% load l10n %}
 
-{% block title %}Lançar Notas - {{ disciplina.nome }}{% endblock %}
-{% block header_title %}Lançar Notas{% endblock %}
+{% block title %}
+Lançar Notas — {{ disciplina.nome }}
+{% endblock %}
+
+{% block header_title %}
+Lançar Notas
+{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'core/css/cadastro_gestor.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/paineldoc.css' %}">
 {% endblock %}
 
 {% block content %}
-<main>
+<main class="conteudo-principal">
 
-  <div class="conteudo-principal-rolavel">
-
-    <!-- TOPO -->
-    <div class="topo-formulario">
-      <h1>
-        {{ disciplina.nome }} — Turma {{ disciplina.turma.nome }}
-      </h1>
-    </div>
-
-    <!-- FORM -->
-    <form method="post" class="formulario">
-      {% csrf_token %}
-
-      <!-- TABELA -->
-      <div style="overflow-x:auto; margin-top:30px;">
-        <table style="width:100%; border-collapse: collapse;">
-          <thead>
-            <tr style="border-bottom:1px solid #e0e0e0;">
-              <th style="text-align:left; padding:12px;">Aluno</th>
-              <th>1º</th>
-              <th>2º</th>
-              <th>3º</th>
-              <th>4º</th>
-              <th>Média</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for aluno in alunos %}
-            <tr style="border-bottom:1px solid #f0f0f0;">
-              <td style="padding:12px; font-weight:500;">
-                {{ aluno.user.get_full_name }}
-              </td>
-
-              {% with nota=notas_dict|get_item:aluno.id %}
-                <td>
-                  <input type="number" step="0.1"
-                         name="nota1_{{ aluno.id }}"
-                         value="{{ nota.nota1|default_if_none:'' }}">
-                </td>
-                <td>
-                  <input type="number" step="0.1"
-                         name="nota2_{{ aluno.id }}"
-                         value="{{ nota.nota2|default_if_none:'' }}">
-                </td>
-                <td>
-                  <input type="number" step="0.1"
-                         name="nota3_{{ aluno.id }}"
-                         value="{{ nota.nota3|default_if_none:'' }}">
-                </td>
-                <td>
-                  <input type="number" step="0.1"
-                         name="nota4_{{ aluno.id }}"
-                         value="{{ nota.nota4|default_if_none:'' }}">
-                </td>
-
-                <td style="font-weight:600;">
-                  {% if nota.media %}
-                    {{ nota.media|floatformat:2 }}
-                  {% else %}
-                    —
-                  {% endif %}
-                </td>
-              {% endwith %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      <!-- BOTÕES -->
-      <div class="botoes" style="margin-top:40px;">
-
-        <!-- VOLTAR PARA A DISCIPLINA -->
-        <a href="{% url 'visualizar_disciplinas' disciplina.id %}"
-           class="btn-voltar2">
-          Voltar
+    <div class="header-docentes">
+        <a href="{% url 'visualizar_disciplinas' disciplina.id %}">
+            <button class="btn-voltar">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
         </a>
 
-        <!-- SALVAR -->
-        <button type="submit" class="btn">
-          Salvar Notas
-        </button>
-      </div>
+        <h1 class="titulo-pagina">
+            {{ disciplina.nome }} — Turma {{ disciplina.turma.nome }}
+        </h1>
+    </div>
 
-    </form>
-  </div>
+    <div class="card-tabela">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="container-tabela">
+                <table class="tabela-notas">
+                    <thead>
+                        <tr>
+                            <th class="col-aluno">Aluno</th>
+                            <th>1º</th>
+                            <th>2º</th>
+                            <th>3º</th>
+                            <th>4º</th>
+                            <th>Média</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for aluno in alunos %}
+                        {% with nota=notas_dict|get_item:aluno.id %}
+                        <tr>
+
+                            <td class="col-aluno">{{ aluno.nome_completo }}</td>
+
+                            <td>
+                                <input type="number" step="0.1" min="0" max="10"
+                                       name="nota1_{{ aluno.id }}"
+                                       value="{% if nota and nota.nota1 is not None %}{{ nota.nota1|unlocalize }}{% endif %}"
+                                       class="nota-input">
+                            </td>
+
+                            <td>
+                                <input type="number" step="0.1" min="0" max="10"
+                                       name="nota2_{{ aluno.id }}"
+                                       value="{% if nota and nota.nota2 is not None %}{{ nota.nota2|unlocalize }}{% endif %}"
+                                       class="nota-input">
+                            </td>
+
+                            <td>
+                                <input type="number" step="0.1" min="0" max="10"
+                                       name="nota3_{{ aluno.id }}"
+                                       value="{% if nota and nota.nota3 is not None %}{{ nota.nota3|unlocalize }}{% endif %}"
+                                       class="nota-input">
+                            </td>
+
+                            <td>
+                                <input type="number" step="0.1" min="0" max="10"
+                                       name="nota4_{{ aluno.id }}"
+                                       value="{% if nota and nota.nota4 is not None %}{{ nota.nota4|unlocalize }}{% endif %}"
+                                       class="nota-input">
+                            </td>
+
+                            <td class="media">
+                                {% if nota and nota.media %}
+                                    {{ nota.media|floatformat:2 }}
+                                {% else %}
+                                    <span class="media-vazia">—</span>
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                        {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-adicionar">
+                    Salvar Notas
+                </button>
+            </div>
+
+        </form>
+    </div>
 
 </main>
 {% endblock %}

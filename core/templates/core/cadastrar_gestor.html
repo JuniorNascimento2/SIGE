@@ -1,8 +1,8 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Cadastro de Gestor{% endblock %}
-{% block header_title %}Cadastro de Gestor{% endblock %}
+{% block title %}{{ gestor.pk|yesno:"Editar,Cadastrar" }} Gestor{% endblock %}
+{% block header_title %}{{ gestor.pk|yesno:"Editar,Cadastrar" }} Gestor{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/cadastro_gestor.css' %}">
@@ -14,7 +14,7 @@
 <div class="container">
     <main>
         <div class="topo-formulario">
-            <h1>Cadastrar Gestor</h1>
+            <h1>{{ gestor.pk|yesno:"Editar,Cadastrar" }} Gestor</h1>
         </div>
 
         <div class="conteudo-principal-rolavel">
@@ -51,7 +51,11 @@
 
                     <div class="caixa-texto">
                         <label class="required">Data de nascimento</label>
-                        {{ form.data_nascimento }}
+                        {% if gestor.pk and gestor.data_nascimento %}
+                            <input type="date" name="data_nascimento" value="{{ gestor.data_nascimento|date:'Y-m-d' }}" required id="id_data_nascimento">
+                        {% else %}
+                            {{ form.data_nascimento }}
+                        {% endif %}
                         {% if form.data_nascimento.errors %}
                             <small class="erro-inline" style="display:block;">{{ form.data_nascimento.errors.0 }}</small>
                         {% else %}
@@ -145,7 +149,12 @@
                     </div>
 
                     <div class="caixa-texto">
-                        <label class="required">Senha</label>
+                        <label {% if not gestor.pk %}class="required"{% endif %}>
+                            Senha
+                            {% if gestor.pk %}
+                                <small style="color: #666; font-weight: normal;"> (deixe em branco para manter a senha atual)</small>
+                            {% endif %}
+                        </label>
                         {{ form.senha }}
                         {% if form.senha.errors %}
                             <small class="erro-inline" style="display:block;">{{ form.senha.errors.0 }}</small>
@@ -154,15 +163,15 @@
                         {% endif %}
                     </div>
 
-                    <div class="requisitos-senha">
+                    <div class="requisitos-senha" id="requisitos-senha-container" {% if gestor.pk %}style="display:none;"{% endif %}>
                         <div class="requisito" id="req-maiuscula"><i class="fa-solid fa-xmark"></i> Pelo menos 1 letra maiúscula</div>
                         <div class="requisito" id="req-minuscula"><i class="fa-solid fa-xmark"></i> Pelo menos 1 letra minúscula</div>
                         <div class="requisito" id="req-numero"><i class="fa-solid fa-xmark"></i> Pelo menos 1 número</div>
-                        <div class="requisito" id="req-caractere"><i class="fa-solid fa-xmark"></i> Pelo menos 8 caracteres</div>
+                        <div class="requisito" id="req-caractere"><i class="fa-solid fa-xmark"></i> Pelo menos 6 caracteres</div>
                     </div>
 
-                    <div class="caixa-texto">
-                        <label class="required">Confirmar senha</label>
+                    <div class="caixa-texto" id="confirmar-senha-container" {% if gestor.pk %}style="display:none;"{% endif %}>
+                        <label {% if not gestor.pk %}class="required"{% endif %}>Confirmar senha</label>
                         {{ form.senha_confirmacao }}
                         {% if form.senha_confirmacao.errors %}
                             <small class="erro-inline" style="display:block;">{{ form.senha_confirmacao.errors.0 }}</small>
@@ -171,7 +180,7 @@
                         {% endif %}
                     </div>
 
-                    <div class="confirmacao-senha" id="senha-match-msg">As senhas não coincidem</div>
+                    <div class="confirmacao-senha" id="senha-match-msg" style="display:none;">As senhas não coincidem</div>
 
                     <div class="caixa-texto upload-foto">
                         <label>Foto de Perfil</label>
@@ -182,7 +191,11 @@
                                 {{ form.foto }}
                             </label>
                             <div class="preview-foto">
-                                <img id="preview-imagem" src="" alt="Pré-visualização">
+                                {% if gestor.pk and gestor.foto %}
+                                    <img id="preview-imagem" src="{{ gestor.foto.url }}" alt="Foto atual" style="display:block;">
+                                {% else %}
+                                    <img id="preview-imagem" src="" alt="Pré-visualização">
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -196,7 +209,7 @@
 
                     <div class="botoes">
                         <button type="button" class="btn-voltar-tab" onclick="voltarEtapa(3)">Anterior</button>
-                        <button type="submit" class="btn">Salvar Cadastro</button>
+                        <button type="submit" class="btn">{{ gestor.pk|yesno:"Atualizar,Salvar" }} Cadastro</button>
                     </div>
                 </div>
 
@@ -208,6 +221,8 @@
 
 {% block extra_js %}
 <script>
+const isEdicao = {{ gestor.pk|yesno:"true,false" }};
+
 // Detecta qual etapa tem erro e abre ela
 document.addEventListener('DOMContentLoaded', function() {
     const etapas = document.querySelectorAll('.etapa');
@@ -231,55 +246,69 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('form-gestor');
     
-    // CPF
     const cpfInput = form.querySelector('[name="cpf"]');
     if (cpfInput) {
         cpfInput.id = 'cpf';
         cpfInput.maxLength = 14;
     }
     
-    // Telefone
     const telefoneInput = form.querySelector('[name="telefone"]');
     if (telefoneInput) {
         telefoneInput.id = 'telefone';
         telefoneInput.maxLength = 15;
     }
     
-    // CEP
     const cepInput = form.querySelector('[name="cep"]');
     if (cepInput) {
         cepInput.id = 'cep';
         cepInput.maxLength = 9;
     }
     
-    // UF
     const ufSelect = form.querySelector('[name="uf"]');
     if (ufSelect) ufSelect.id = 'uf';
     
-    // Cidade
     const cidadeInput = form.querySelector('[name="cidade"]');
     if (cidadeInput) {
         cidadeInput.id = 'cidade';
         cidadeInput.placeholder = 'Digite a cidade se não encontrar pelo CEP';
     }
     
-    // Senha
     const senhaInput = form.querySelector('[name="senha"]');
     if (senhaInput) {
         senhaInput.id = 'senha';
-        senhaInput.minLength = 8;
+        senhaInput.minLength = 6;
     }
     
-    // Confirmar senha
     const senhaConfirmInput = form.querySelector('[name="senha_confirmacao"]');
     if (senhaConfirmInput) senhaConfirmInput.id = 'senha_confirmacao';
     
-    // Foto
     const fotoInput = form.querySelector('[name="foto"]');
     if (fotoInput) {
         fotoInput.accept = 'image/*';
         fotoInput.addEventListener('change', function() {
             previewFoto(this);
+        });
+    }
+});
+
+// --- LÓGICA DE SENHA NA EDIÇÃO ---
+document.addEventListener('DOMContentLoaded', function() {
+    if (!isEdicao) return; // só executa na edição
+
+    const senhaInput = document.getElementById('senha');
+    const requisitosContainer = document.getElementById('requisitos-senha-container');
+    const confirmarContainer = document.getElementById('confirmar-senha-container');
+
+    if (senhaInput) {
+        senhaInput.addEventListener('input', function() {
+            // Se digitar algo na senha, mostra confirmação e requisitos
+            if (this.value.length > 0) {
+                requisitosContainer.style.display = 'block';
+                confirmarContainer.style.display = 'flex';
+            } else {
+                requisitosContainer.style.display = 'none';
+                confirmarContainer.style.display = 'none';
+            }
         });
     }
 });
@@ -298,8 +327,15 @@ function validarEtapa(n) {
     const etapa = document.getElementById(`etapa-${n}`);
     const campos = etapa.querySelectorAll("input[required], select[required]");
     let valido = true;
+    
     campos.forEach(campo => {
         const erro = campo.nextElementSibling;
+        
+        // Na edição, senha não é obrigatória
+        if (isEdicao && (campo.name === 'senha' || campo.name === 'senha_confirmacao')) {
+            return; // pula validação
+        }
+        
         if (!campo.value.trim()) {
             campo.classList.add("campo-erro");
             if (erro && erro.classList.contains('erro-inline')) {
@@ -314,6 +350,7 @@ function validarEtapa(n) {
             }
         }
     });
+    
     if (valido) proximaEtapa(n);
 }
 
@@ -357,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.value = v.replace(/(\d{5})(\d)/,'$1-$2');
         });
 
-        // --- Preenchimento automático de CEP ---
         cepInput.addEventListener('blur', function() {
             let cep = this.value.replace(/\D/g,'');
             if(cep.length !== 8) return;
@@ -406,14 +442,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: 'req-maiuscula', regex: /[A-Z]/ },
                 { id: 'req-minuscula', regex: /[a-z]/ },
                 { id: 'req-numero', regex: /\d/ },
-                { id: 'req-caractere', regex: /.{8,}/ }
+                { id: 'req-caractere', regex: /.{6,}/ }
             ];
             regras.forEach(r => {
                 const el = document.getElementById(r.id);
-                if(r.regex.test(val)) {
+                if(el && r.regex.test(val)) {
                     el.classList.add('valid');
                     el.querySelector('i').className = 'fa-solid fa-check';
-                } else {
+                } else if(el) {
                     el.classList.remove('valid');
                     el.querySelector('i').className = 'fa-solid fa-xmark';
                 }

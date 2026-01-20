@@ -179,10 +179,10 @@ class Disciplina(models.Model):
         return f"{self.nome} ({self.turma})"
 
 
-# ------------------ NOTAS ------------------
 class Nota(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
+
     nota1 = models.FloatField(null=True, blank=True)
     nota2 = models.FloatField(null=True, blank=True)
     nota3 = models.FloatField(null=True, blank=True)
@@ -191,12 +191,21 @@ class Nota(models.Model):
     class Meta:
         unique_together = ('aluno', 'disciplina')
 
+    @property
     def media(self):
-        notas = [n for n in [self.nota1, self.nota2, self.nota3, self.nota4] if n is not None]
+        notas = [
+            n for n in [
+                self.nota1,
+                self.nota2,
+                self.nota3,
+                self.nota4
+            ] if n is not None
+        ]
         return sum(notas) / len(notas) if notas else None
 
     def __str__(self):
         return f"{self.aluno} - {self.disciplina}"
+
 
 
 # ------------------ GESTOR ------------------

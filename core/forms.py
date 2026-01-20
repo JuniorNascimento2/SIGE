@@ -530,35 +530,6 @@ class EditarPerfilForm(forms.ModelForm):
 
 
 
-# --- EDITAR PERFIL PROFESSOR ---
-class EditarPerfilProfessorForm(forms.ModelForm):
-    nome_completo = forms.CharField(label='Nome completo')
-    nova_senha = forms.CharField(
-        label='Nova Senha',
-        required=False,
-        widget=forms.PasswordInput
-    )
-
-    class Meta:
-        model = User
-        fields = ['nome_completo', 'email']
-
-
-# --- EDITAR PERFIL ALUNO ---
-class EditarPerfilAlunoForm(forms.ModelForm):
-    nome_completo = forms.CharField(label='Nome completo')
-    nova_senha = forms.CharField(
-        label='Nova Senha',
-        required=False,
-        widget=forms.PasswordInput
-    )
-
-    class Meta:
-        model = User
-        fields = ['nome_completo', 'email']
-
-
-
 
 
 from django import forms

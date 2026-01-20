@@ -1,8 +1,8 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Cadastro de Professor{% endblock %}
-{% block header_title %}Cadastro de Professor{% endblock %}
+{% block title %}{{ professor.pk|yesno:"Editar,Cadastrar" }} Professor{% endblock %}
+{% block header_title %}{{ professor.pk|yesno:"Editar,Cadastrar" }} Professor{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/cadastro_gestor.css' %}">
@@ -14,7 +14,7 @@
 <div class="container">
     <main>
         <div class="topo-formulario">
-            <h1>Cadastrar Docente</h1>
+            <h1>{{ professor.pk|yesno:"Editar,Cadastrar" }} Docente</h1>
         </div>
 
         <div class="conteudo-principal-rolavel">
@@ -73,7 +73,11 @@
 
                     <div class="caixa-texto">
                         <label>Data de nascimento</label>
-                        {{ form.data_nascimento }}
+                        {% if professor.pk and professor.data_nascimento %}
+                            <input type="date" name="data_nascimento" value="{{ professor.data_nascimento|date:'Y-m-d' }}" id="id_data_nascimento">
+                        {% else %}
+                            {{ form.data_nascimento }}
+                        {% endif %}
                         {% if form.data_nascimento.errors %}
                             <small class="erro-inline" style="display:block;">{{ form.data_nascimento.errors.0 }}</small>
                         {% else %}
@@ -197,7 +201,12 @@
                     </div>
 
                     <div class="caixa-texto">
-                        <label class="required">Senha</label>
+                        <label {% if not professor.pk %}class="required"{% endif %}>
+                            Senha
+                            {% if professor.pk %}
+                                <small style="color: #666; font-weight: normal;"> (deixe em branco para manter a senha atual)</small>
+                            {% endif %}
+                        </label>
                         {{ form.senha }}
                         {% if form.senha.errors %}
                             <small class="erro-inline" style="display:block;">{{ form.senha.errors.0 }}</small>
@@ -206,15 +215,15 @@
                         {% endif %}
                     </div>
 
-                    <div class="requisitos-senha">
+                    <div class="requisitos-senha" id="requisitos-senha-container" {% if professor.pk %}style="display:none;"{% endif %}>
                         <div class="requisito" id="req-maiuscula"><i class="fa-solid fa-xmark"></i> Pelo menos 1 letra maiúscula</div>
                         <div class="requisito" id="req-minuscula"><i class="fa-solid fa-xmark"></i> Pelo menos 1 letra minúscula</div>
                         <div class="requisito" id="req-numero"><i class="fa-solid fa-xmark"></i> Pelo menos 1 número</div>
                         <div class="requisito" id="req-caractere"><i class="fa-solid fa-xmark"></i> Pelo menos 6 caracteres</div>
                     </div>
 
-                    <div class="caixa-texto">
-                        <label class="required">Confirmar Senha</label>
+                    <div class="caixa-texto" id="confirmar-senha-container" {% if professor.pk %}style="display:none;"{% endif %}>
+                        <label {% if not professor.pk %}class="required"{% endif %}>Confirmar Senha</label>
                         {{ form.senha_confirmacao }}
                         {% if form.senha_confirmacao.errors %}
                             <small class="erro-inline" style="display:block;">{{ form.senha_confirmacao.errors.0 }}</small>
@@ -223,7 +232,7 @@
                         {% endif %}
                     </div>
 
-                    <div class="confirmacao-senha" id="senha-match-msg">As senhas não coincidem</div>
+                    <div class="confirmacao-senha" id="senha-match-msg" style="display:none;">As senhas não coincidem</div>
 
                     <div class="caixa-texto upload-foto">
                         <label>Foto de Perfil</label>
@@ -234,7 +243,11 @@
                                 {{ form.foto }}
                             </label>
                             <div class="preview-foto">
-                                <img id="preview-imagem" src="" alt="Pré-visualização">
+                                {% if professor.pk and professor.foto %}
+                                    <img id="preview-imagem" src="{{ professor.foto.url }}" alt="Foto atual" style="display:block;">
+                                {% else %}
+                                    <img id="preview-imagem" src="" alt="Pré-visualização">
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -248,7 +261,7 @@
 
                     <div class="botoes">
                         <button type="button" class="btn-voltar-tab" onclick="voltarEtapa(3)">Anterior</button>
-                        <button type="submit" class="btn">Salvar Cadastro</button>
+                        <button type="submit" class="btn">{{ professor.pk|yesno:"Atualizar,Salvar" }} Cadastro</button>
                     </div>
                 </div>
             </form>
@@ -259,6 +272,8 @@
 
 {% block extra_js %}
 <script>
+const isEdicao = {{ professor.pk|yesno:"true,false" }};
+
 // ========== DETECÇÃO DE ERROS E ABERTURA DA ETAPA CORRETA ==========
 document.addEventListener('DOMContentLoaded', function() {
     const etapas = document.querySelectorAll('.etapa');
@@ -333,6 +348,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// ========== LÓGICA DE SENHA NA EDIÇÃO ==========
+document.addEventListener('DOMContentLoaded', function() {
+    if (!isEdicao) return;
+
+    const senhaInput = document.getElementById('senha');
+    const requisitosContainer = document.getElementById('requisitos-senha-container');
+    const confirmarContainer = document.getElementById('confirmar-senha-container');
+
+    if (senhaInput) {
+        senhaInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                requisitosContainer.style.display = 'block';
+                confirmarContainer.style.display = 'flex';
+            } else {
+                requisitosContainer.style.display = 'none';
+                confirmarContainer.style.display = 'none';
+            }
+        });
+    }
+});
+
 // ========== MULTI-STEP E VALIDAÇÃO ==========
 function atualizarIndicadores(etapaAtiva) {
     for (let i = 1; i <= 3; i++) {
@@ -350,6 +386,12 @@ function validarEtapa(n) {
     
     campos.forEach(campo => {
         const erro = campo.nextElementSibling;
+        
+        // Na edição, senha não é obrigatória
+        if (isEdicao && (campo.name === 'senha' || campo.name === 'senha_confirmacao')) {
+            return;
+        }
+        
         if (!campo.value.trim()) {
             campo.classList.add("campo-erro");
             if (erro && erro.classList.contains('erro-inline')) {
