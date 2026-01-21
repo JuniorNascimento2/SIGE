@@ -1,234 +1,664 @@
-body {
-  margin: 0;
-  background: #58a0c8;
-  font-family: 'Montserrat', sans-serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+/* ============================
+   CONTAINER CENTRALIZADO
+   ============================ */
+.container-centralizado {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-
-.topo-titulos {
-  width: 70vw;
-  max-width: 1000px;
-  margin: 32px auto 18px auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.conteudo-principal {
+    margin-top: 80px;
 }
 
-.titulo {
-  font-size: 2.2rem;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 1px;
+/* ============================
+   HEADER DO PAINEL
+   ============================ */
+.header-painel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-.turma {
-  font-size: 1.9rem;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 1px;
+.saudacao h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin: 0;
 }
 
-.painel {
-  width: 70vw;
-  max-width: 900px;
-  margin: 0 auto;
-  background: #58a0c8;
-  border: 8px solid #113f67;
-  border-radius: 32px 32px 20px 20px;
-  box-sizing: border-box;
-  padding-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+.saudacao p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-top: 5px;
 }
 
-/* Tabela */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #58a0c8;
-  border-radius: 24px 24px 0 0;
-  overflow: hidden;
-  margin: 0;
-}
-
-th, td {
-  border: 3px solid #113f67;
-  box-sizing: border-box;
-  padding: 12px 0;
-  text-align: center;
-  font-size: 1.05rem;
-}
-
-th {
-  background: #58a0c8;
-  color: #fdf5aa;
-  font-weight: bold;
-  font-size: 1.3rem;
-  border-bottom-width: 3px;
-}
-
-th.destaque {
-  font-weight: 800;
-}
-
-th:first-child {
-  border-top-left-radius: 16px;
-}
-th:last-child {
-  border-top-right-radius: 16px;
-}
-
-td {
-  color: #111;
-  font-weight: 500;
-  background: #58a0c8;
-}
-
-td:first-child {
-  text-align: left;
-  padding-left: 18px;
-  font-size: 1.05rem;
-}
-
-@media (max-width: 900px) {
-  .painel, .topo-titulos {
-    max-width: 99vw;
-    width: 99vw;
-  }
-  th, td {
-    font-size: 0.95rem;
-    padding: 8px 0;
-  }
-  .titulo, .turma {
+.btn-imprimir {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
     font-size: 1rem;
-  }
-  td:first-child {
-    padding-left: 8px;
-  }
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
 }
 
-
-
-
-
-body {
-  margin: 0;
-  background: #58a0c8;
-  font-family: 'Montserrat', sans-serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.btn-imprimir:hover {
+    background-color: #357ae8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
 }
 
-/* Títulos fora do painel */
-.topo-titulos {
-  width: 75vw;
-  max-width: 1000px;
-  margin: 32px auto 18px auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* ============================
+   CARDS DE RESUMO
+   ============================ */
+.cards-resumo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-.titulo {
-  font-size: 30px;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 1px;
+.card-info {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
 }
 
-.turma {
-  font-size: 20px;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 1px;
+.card-info:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* Painel da tabela */
-.painel {
-  width: 75vw;
-  max-width: 1000px;
-  margin: 0 auto;
-  background: #58a0c8;
-  border: 8px solid #113f67;
-  border-radius: 32px 32px 20px 20px;
-  box-sizing: border-box;
-  padding-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+.card-icon {
+    font-size: 3rem;
 }
 
-/* Tabela */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #58a0c8;
-  border-radius: 24px 24px 0 0;
-  overflow: hidden;
-  margin: 0;
+.card-dados p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-th, td {
-  border: 3px solid #113f67;
-  box-sizing: border-box;
-  padding: 12px 0;
-  text-align: center;
-  font-size: 1.05rem;
+.card-dados h3 {
+    font-size: 2rem;
+    color: #4285F4;
+    margin: 0;
+    font-weight: 700;
 }
 
-th {
-  background: #58a0c8;
-  color: #fdf5aa;
-  font-weight: bold;
-  font-size: 1.3rem;
-  border-bottom-width: 3px;
+/* ============================
+   CONTEÚDO GERAL - GRID
+   ============================ */
+.conteudo-geral {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-th.destaque {
-  font-weight: 800;
+/* ============================
+   SEÇÃO DE DISCIPLINAS
+   ============================ */
+.secao-disciplinas {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-th:first-child {
-  border-top-left-radius: 16px;
-}
-th:last-child {
-  border-top-right-radius: 16px;
-}
-
-td {
-  color: #111;
-  font-weight: 500;
-  background: #58a0c8;
+.secao-disciplinas h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
 }
 
-td:first-child {
-  text-align: left;
-  padding-left: 18px;
-  font-size: 1.05rem;
+.lista-disciplinas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-@media (max-width: 900px) {
-  .painel, .topo-titulos {
-    max-width: 99vw;
-    width: 99vw;
-  }
-  th, td {
+/* ============================
+   CARD DE DISCIPLINA (ACCORDION)
+   ============================ */
+.disciplina-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.disciplina-card:hover {
+    border-color: #4285F4;
+}
+
+.disciplina-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    cursor: pointer;
+    background: #f9fafb;
+    transition: background 0.2s ease;
+}
+
+.disciplina-header:hover {
+    background: #f3f4f6;
+}
+
+.disciplina-info h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin: 0 0 5px 0;
+}
+
+.disciplina-info p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+.disciplina-media {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.disciplina-media .label {
+    font-size: 0.75rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.disciplina-media .valor-media {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #4285F4;
+}
+
+.seta {
+    font-size: 1.2rem;
+    color: #666;
+    transition: transform 0.3s ease;
+}
+
+/* NOTAS (FECHADAS POR PADRÃO) */
+.disciplina-notas {
+    display: none;
+    padding: 20px;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.disciplina-card.aberto .disciplina-notas {
+    display: grid;
+}
+
+.nota-item {
+    text-align: center;
+    padding: 15px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.nota-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.nota-valor {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4285F4;
+}
+
+/* ============================
+   COLUNA DIREITA
+   ============================ */
+.coluna-direita {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ============================
+   GRÁFICO DE DESEMPENHO
+   ============================ */
+.card-grafico {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card-grafico h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0 0 20px 0;
+}
+
+/* ============================
+   CALENDÁRIO COMPACTO
+   ============================ */
+.calendario {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.calendario-cabecalho {
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.calendario-cabecalho h2 {
+    color: #4285F4;
+    font-size: 1.2rem;
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.calendario-ano {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #888;
+}
+
+.calendario-grade {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.nome-dia {
+    text-align: center;
+    font-weight: 600;
+    color: #4285F4;
+    padding: 6px 0;
+    font-size: 0.75rem;
+}
+
+.dia {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: 500;
+    color: #333;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.dia:not(.vazio):hover {
+    background: #e3f2fd;
+    color: #4285F4;
+}
+
+.dia.atual {
+    background: #4285F4;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(66, 133, 244, 0.4);
+}
+
+.dia.vazio {
+    opacity: 0;
+    cursor: default;
+}
+
+/* ============================
+   GRADE HORÁRIA
+   ============================ */
+.secao-grade {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.secao-grade h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.grade-wrapper {
+    overflow-x: auto;
+}
+
+.grade-table {
+    width: 100%;
+    border-collapse: collapse;
     font-size: 0.95rem;
-    padding: 8px 0;
-  }
-  .titulo, .turma {
+}
+
+.grade-table thead th {
+    background: #f3f4f6;
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    color: #334155;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.grade-table tbody td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+    color: #475569;
+}
+
+.grade-table tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.grade-table .horario-col {
+    font-weight: 600;
+    background: #f3f4f6;
+    text-align: left;
+    padding-left: 15px;
+}
+
+.aviso-grade {
+    text-align: center;
+    color: #666;
+    padding: 30px;
+    font-style: italic;
+}
+
+/* ============================
+   MODAL DE IMPRESSÃO
+   ============================ */
+.modal-impressao {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-conteudo {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+}
+
+.fechar-modal {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 10;
+}
+
+.fechar-modal:hover {
+    color: #333;
+}
+
+/* BOLETIM PARA IMPRESSÃO */
+.boletim-imprimir {
+    padding: 20px;
+}
+
+.boletim-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #4285F4;
+    padding-bottom: 20px;
+}
+
+.boletim-header h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.sistema {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.boletim-info-aluno {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.info-linha {
+    display: flex;
+    gap: 10px;
+}
+
+.info-linha .label {
+    font-weight: 600;
+    color: #333;
+}
+
+.info-linha .valor {
+    color: #666;
+}
+
+.boletim-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.boletim-tabela th,
+.boletim-tabela td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+}
+
+.boletim-tabela thead th {
+    background: #4285F4;
+    color: white;
+    font-weight: 600;
+}
+
+.boletim-tabela tbody td {
+    color: #333;
+}
+
+.boletim-tabela tfoot {
+    background: #f3f4f6;
+    font-weight: bold;
+}
+
+.boletim-footer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.boletim-footer p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.assinatura {
+    margin-top: 60px;
+    font-weight: normal;
+}
+
+.assinatura-texto {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.btn-imprimir-modal {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
     font-size: 1rem;
-  }
-  td:first-child {
-    padding-left: 8px;
-  }
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-imprimir-modal:hover {
+    background-color: #357ae8;
+}
+
+/* ============================
+   IMPRESSÃO (CSS PARA PRINT)
+   ============================ */
+@media print {
+    @page {
+        size: A4;
+        margin: 1cm;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    * {
+        visibility: hidden;
+    }
+    
+    #boletim-imprimir,
+    #boletim-imprimir * {
+        visibility: visible;
+    }
+    
+    #boletim-imprimir {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .modal-impressao {
+        display: block !important;
+        position: static;
+        background: none;
+    }
+    
+    .modal-conteudo {
+        box-shadow: none;
+        max-height: none;
+        overflow: visible;
+        padding: 0;
+        width: 100%;
+        max-width: none;
+    }
+    
+    .btn-imprimir-modal,
+    .fechar-modal {
+        display: none !important;
+    }
+    
+    .boletim-tabela {
+        page-break-inside: avoid;
+    }
+    
+    .boletim-header,
+    .boletim-info-aluno {
+        page-break-inside: avoid;
+    }
+}
+
+/* ============================
+   RESPONSIVIDADE
+   ============================ */
+@media (max-width: 1024px) {
+    .conteudo-geral {
+        grid-template-columns: 1fr;
+    }
+    
+    .cards-resumo {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-centralizado {
+        padding: 15px;
+    }
+    
+    .header-painel {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .saudacao h1 {
+        font-size: 1.8rem;
+    }
+    
+    .cards-resumo {
+        grid-template-columns: 1fr;
+    }
+    
+    .disciplina-notas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .boletim-info-aluno {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-conteudo {
+        width: 95%;
+        padding: 20px;
+    }
 }

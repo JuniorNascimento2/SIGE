@@ -13,8 +13,20 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="conteudo-principal-rolavel">
 
-        <div class="usuario">
+        <!-- HEADER COM NOME E FILTRO -->
+        <div class="header-painel">
             <h1>Olá, {{ nome_exibicao }}</h1>
+            
+            <form method="get" class="filtro-ano-painel">
+                <label>📅 Ano Letivo</label>
+                <select name="ano" onchange="this.form.submit()">
+                    {% for ano in anos_disponiveis %}
+                        <option value="{{ ano }}" {% if ano == ano_filtro %}selected{% endif %}>
+                            {{ ano }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
         </div>
 
         <div class="conteudo-geral">
@@ -78,16 +90,5 @@
         </div>
     </main>
 </div>
-
-<!--<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const toggleBtn = document.getElementById("menu-toggle");
-    const menuLateral = document.getElementById("menu-lateral");
-
-    toggleBtn.addEventListener("click", () => {
-        menuLateral.classList.toggle("ativo");
-    });
-});
-</script>-->
 
 {% endblock %}

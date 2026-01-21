@@ -19,7 +19,7 @@ def login_view(request):
         elif hasattr(request.user, 'aluno'):
             return redirect('painel_aluno')
         elif hasattr(request.user, 'gestor'):
-            return redirect('painel_gestor')
+            return redirect('painel_super')
 
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -67,6 +67,7 @@ def gerar_calendario():
             })
 
     return celulas
+
 # -------------------- SUPERUSUÁRIO --------------------
 def is_superuser(user):
     return user.is_superuser
@@ -82,13 +83,34 @@ def painel_super(request):
     foto_perfil_url = get_foto_perfil(request.user)
     ano_atual = datetime.now().year
 
-    # Contagem apenas para turmas do ano atual
-    turmas_ano_atual = Turma.objects.filter(ano=ano_atual)
+    # 🔥 FILTRO DE ANO
+    # Busca todos os anos disponíveis das turmas
+    anos_disponiveis_qs = Turma.objects.values_list('ano', flat=True).distinct().order_by('-ano')
+    anos_disponiveis = list(anos_disponiveis_qs)
+    
+    # Se não houver turmas, adiciona o ano atual
+    if not anos_disponiveis:
+        anos_disponiveis = [ano_atual]
+    
+    # Pega o ano do filtro (GET) ou usa o ano atual
+    ano_filtro = request.GET.get('ano')
+    try:
+        ano_filtro = int(ano_filtro) if ano_filtro else ano_atual
+    except ValueError:
+        ano_filtro = ano_atual
+    
+    # Garante que o ano_filtro existe na lista
+    if ano_filtro not in anos_disponiveis:
+        anos_disponiveis.append(ano_filtro)
+        anos_disponiveis.sort(reverse=True)
 
-    total_turmas = turmas_ano_atual.count()
-    total_alunos = Aluno.objects.filter(turma__in=turmas_ano_atual).distinct().count()
-    total_professores = Professor.objects.filter(disciplina__turma__in=turmas_ano_atual).distinct().count()
-    total_disciplinas = Disciplina.objects.filter(turma__in=turmas_ano_atual).distinct().count()
+    # Contagem para turmas do ano filtrado (em vez de ano_atual)
+    turmas_ano_filtrado = Turma.objects.filter(ano=ano_filtro)
+
+    total_turmas = turmas_ano_filtrado.count()
+    total_alunos = Aluno.objects.filter(turma__in=turmas_ano_filtrado).distinct().count()
+    total_professores = Professor.objects.filter(disciplina__turma__in=turmas_ano_filtrado).distinct().count()
+    total_disciplinas = Disciplina.objects.filter(turma__in=turmas_ano_filtrado).distinct().count()
 
     return render(request, "core/painel_super.html", {
         "usuario": request.user,
@@ -100,6 +122,8 @@ def painel_super(request):
         "foto_perfil_url": foto_perfil_url,
         "agora": datetime.now(),
         "calendario": gerar_calendario(),
+        "anos_disponiveis": anos_disponiveis,  # ✅ Novo
+        "ano_filtro": ano_filtro,              # ✅ Novo
     })
 
 @login_required
@@ -352,9 +376,7 @@ def excluir_professor(request, professor_id):
 
 # ---- GESTOR (Painel da Gestão Escolar) ----
 
-@login_required
-def painel_gestor(request):
-    return redirect('painel_super')
+
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser or (hasattr(u, 'gestor') and u.gestor.cargo in ['diretor', 'vice_diretor']))
@@ -824,6 +846,7 @@ def lancar_nota(request, disciplina_id):
 
 
 # ALUNO
+# VIEW DO PAINEL DO ALUNO - ATUALIZADA
 @login_required
 def painel_aluno(request):
     if not hasattr(request.user, 'aluno'):
@@ -831,22 +854,64 @@ def painel_aluno(request):
 
     aluno = request.user.aluno
 
-    # Pega todas as disciplinas da turma
+    # Disciplinas e notas
     disciplinas = Disciplina.objects.filter(turma=aluno.turma)
-
-    # Cria lista estruturada: cada item terá {disciplina, nota}
+    
     disciplinas_com_notas = []
+    soma_medias = 0
+    total_disciplinas_com_media = 0
+    total_notas_lancadas = 0
+    total_notas_possiveis = disciplinas.count() * 4  # 4 bimestres
+    
     for disciplina in disciplinas:
         nota = Nota.objects.filter(aluno=aluno, disciplina=disciplina).first()
+        
+        if nota:
+            # Contar quantas notas foram lançadas
+            if nota.nota1 is not None:
+                total_notas_lancadas += 1
+            if nota.nota2 is not None:
+                total_notas_lancadas += 1
+            if nota.nota3 is not None:
+                total_notas_lancadas += 1
+            if nota.nota4 is not None:
+                total_notas_lancadas += 1
+        
         disciplinas_com_notas.append({
             "disciplina": disciplina,
             "nota": nota
         })
+        
+        # Calcular média geral
+        if nota and nota.media:
+            soma_medias += nota.media
+            total_disciplinas_com_media += 1
+    
+    # Média geral do aluno
+    media_geral = soma_medias / total_disciplinas_com_media if total_disciplinas_com_media > 0 else None
+
+    # Grade horária
+    try:
+        grade_obj = GradeHorario.objects.get(turma=aluno.turma)
+        grade_horario = grade_obj.dados
+    except GradeHorario.DoesNotExist:
+        grade_horario = None
+
+    # Calendário
+    calendario = gerar_calendario()
+    agora = datetime.now()
 
     return render(request, 'core/painel_aluno.html', {
         "aluno": aluno,
         "disciplinas_com_notas": disciplinas_com_notas,
+        "media_geral": media_geral,
+        "total_notas_lancadas": total_notas_lancadas,
+        "total_notas_possiveis": total_notas_possiveis,
+        "grade_horario": grade_horario,
+        "calendario": calendario,
+        "agora": agora,
     })
+ 
 
 
 @login_required

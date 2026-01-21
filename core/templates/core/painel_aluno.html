@@ -1,59 +1,467 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load l10n %}
 
-{% block title %}Painel do Aluno{% endblock %}
-{% block header_title %}Painel do Aluno{% endblock %}
-
+{% block title %}Meu Painel{% endblock %}
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'core/css/painel_aluno.css' %}">
-{% endblock %}
-
-{% block user_info %}
-  <span>Olá, <a href="#">{{ aluno.nome_completo.split|first }}</a></span>
-  <a href="{% url 'editar_perfil_aluno' %}"><i class="fas fa-user"></i></a>
-  <a href="{% url 'logout' %}"><i class="fas fa-power-off"></i></a>
+<link rel="stylesheet" href="{% static 'core/css/painel_aluno.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
-  <div class="topo-titulos">
-    <span class="titulo">MINHAS NOTAS</span>
-    <span class="turma">Turma: {{ aluno.turma.nome }}</span>
-  </div>
 
-  <div class="painel">
-    <table>
-      <thead>
-        <tr>
-          <th class="destaque">Disciplina</th>
-          <th>1º</th>
-          <th>2º</th>
-          <th>3º</th>
-          <th>4º</th>
-          <th class="destaque">Média</th>
-        </tr>
-      </thead>
-      <tbody>
+<div class="container-centralizado">
+    <main class="conteudo-principal">
 
-        {% for item in disciplinas_com_notas %}
-          <tr>
-            <td>{{ item.disciplina.nome }}</td>
+        <!-- HEADER -->
+        <div class="header-painel">
+            <div class="saudacao">
+                <h1>Olá, {{ aluno.nome_completo|truncatewords:2 }}! 👋</h1>
+                <p>{{ aluno.turma.nome }} • {{ aluno.turma.get_turno_display }}</p>
+            </div>
+            
+            <button onclick="imprimirBoletim()" class="btn-imprimir">
+                <i class="fa-solid fa-print"></i> Imprimir Boletim
+            </button>
+        </div>
 
-            <td>{{ item.nota.nota1|default_if_none:"-" }}</td>
-            <td>{{ item.nota.nota2|default_if_none:"-" }}</td>
-            <td>{{ item.nota.nota3|default_if_none:"-" }}</td>
-            <td>{{ item.nota.nota4|default_if_none:"-" }}</td>
+        <!-- CARDS DE RESUMO -->
+        <section class="cards-resumo">
+            <div class="card-info">
+                <div class="card-icon">📚</div>
+                <div class="card-dados">
+                    <p>Disciplinas</p>
+                    <h3>{{ disciplinas_com_notas|length }}</h3>
+                </div>
+            </div>
 
-            <td>
-              {% if item.nota and item.nota.media %}
-                {{ item.nota.media|floatformat:2 }}
-              {% else %}
-                -
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
+            <div class="card-info">
+                <div class="card-icon">📊</div>
+                <div class="card-dados">
+                    <p>Média Geral</p>
+                    <h3>{{ media_geral|floatformat:1|default:"--" }}</h3>
+                </div>
+            </div>
 
-      </tbody>
-    </table>
-  </div>
+            <div class="card-info">
+                <div class="card-icon">🎯</div>
+                <div class="card-dados">
+                    {% if total_notas_possiveis > 0 and total_notas_lancadas == total_notas_possiveis %}
+
+                        {# ==========================
+                           SITUAÇÃO GERAL (CORRETA)
+                           Reprovado: existe alguma disciplina com media <= 4
+                           Recuperação: não tem <=4, mas existe alguma com media < 6
+                           Aprovado: todas com media >= 6
+                           ========================== #}
+
+                        {# flags #}
+                        {% with tem_reprovacao=False tem_recuperacao=False %}
+
+                            {# 1) verifica se tem reprovado em alguma disciplina (<=4) #}
+                            {% for item in disciplinas_com_notas %}
+                                {% if item.nota and item.nota.nota1 != None and item.nota.nota2 != None and item.nota.nota3 != None and item.nota.nota4 != None %}
+                                    {% if item.nota.media <= 4 %}
+                                        {% with tem_reprovacao=True %}{% endwith %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {# 2) se não reprovou, verifica recuperação (media < 6) #}
+                            {% if not tem_reprovacao %}
+                                {% for item in disciplinas_com_notas %}
+                                    {% if item.nota and item.nota.nota1 != None and item.nota.nota2 != None and item.nota.nota3 != None and item.nota.nota4 != None %}
+                                        {% if item.nota.media < 6 %}
+                                            {% with tem_recuperacao=True %}{% endwith %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+                            <p>Situação</p>
+                            <h3>
+                                {% if tem_reprovacao %}
+                                    Reprovado
+                                {% elif tem_recuperacao %}
+                                    Recuperação
+                                {% else %}
+                                    Aprovado
+                                {% endif %}
+                            </h3>
+
+                        {% endwith %}
+
+                    {% else %}
+                        <p>Notas Lançadas</p>
+                        <h3>{{ total_notas_lancadas }}/{{ total_notas_possiveis }}</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <div class="conteudo-geral">
+
+            <!-- DISCIPLINAS E NOTAS -->
+            <div class="secao-disciplinas">
+                <h2>📖 Minhas Disciplinas e Notas</h2>
+                
+                <div class="lista-disciplinas">
+                    {% for item in disciplinas_com_notas %}
+                    <div class="disciplina-card">
+                        <div class="disciplina-header" onclick="toggleNotas(this)">
+                            <div class="disciplina-info">
+                                <h3>{{ item.disciplina.nome }}</h3>
+                                <p>Prof. {{ item.disciplina.professor.nome_completo }}</p>
+
+                                {% if item.nota and item.nota.nota1 != None and item.nota.nota2 != None and item.nota.nota3 != None and item.nota.nota4 != None %}
+                                    <p style="margin-top:6px;">
+                                        <strong>Situação:</strong>
+                                        {% if item.nota.media >= 6 %}
+                                            <span>Aprovado</span>
+                                        {% elif item.nota.media > 4 %}
+                                            <span>Recuperação</span>
+                                        {% else %}
+                                            <span>Reprovado</span>
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="disciplina-media">
+                                <span class="label">Média</span>
+                                <span class="valor-media">
+                                    {{ item.nota.media|floatformat:1|default:"--" }}
+                                </span>
+                            </div>
+
+                            <i class="fa-solid fa-chevron-down seta"></i>
+                        </div>
+                        
+                        <div class="disciplina-notas">
+                            <div class="nota-item">
+                                <span class="nota-label">1º Bimestre</span>
+                                <span class="nota-valor">{{ item.nota.nota1|default:"--" }}</span>
+                            </div>
+                            <div class="nota-item">
+                                <span class="nota-label">2º Bimestre</span>
+                                <span class="nota-valor">{{ item.nota.nota2|default:"--" }}</span>
+                            </div>
+                            <div class="nota-item">
+                                <span class="nota-label">3º Bimestre</span>
+                                <span class="nota-valor">{{ item.nota.nota3|default:"--" }}</span>
+                            </div>
+                            <div class="nota-item">
+                                <span class="nota-label">4º Bimestre</span>
+                                <span class="nota-valor">{{ item.nota.nota4|default:"--" }}</span>
+                            </div>
+
+                            {% if item.nota and item.nota.nota1 != None and item.nota.nota2 != None and item.nota.nota3 != None and item.nota.nota4 != None %}
+                            <div class="nota-item">
+                                <span class="nota-label"><strong>Situação</strong></span>
+                                <span class="nota-valor">
+                                    {% if item.nota.media >= 6 %}
+                                        <strong>Aprovado</strong>
+                                    {% elif item.nota.media > 4 %}
+                                        <strong>Recuperação</strong>
+                                    {% else %}
+                                        <strong>Reprovado</strong>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- COLUNA DIREITA -->
+            <div class="coluna-direita">
+                
+                <!-- GRÁFICO DE DESEMPENHO -->
+                <div class="card-grafico">
+                    <h3>📈 Meu Desempenho</h3>
+                    <canvas id="graficoDesempenho"></canvas>
+                </div>
+
+                <!-- CALENDÁRIO -->
+                <div class="calendario">
+                    <div class="calendario-cabecalho">
+                        <h2>{{ agora|date:"F"|upper }}</h2>
+                        <span class="calendario-ano">{{ agora|date:"Y" }}</span>
+                    </div>
+
+                    <div class="calendario-grade">
+                        <div class="nome-dia">D</div>
+                        <div class="nome-dia">S</div>
+                        <div class="nome-dia">T</div>
+                        <div class="nome-dia">Q</div>
+                        <div class="nome-dia">Q</div>
+                        <div class="nome-dia">S</div>
+                        <div class="nome-dia">S</div>
+
+                        {% for celula in calendario %}
+                            <div class="dia {% if celula.hoje %}atual{% endif %} {% if celula.vazio %}vazio{% endif %}">
+                                {% if not celula.vazio %}{{ celula.numero }}{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- GRADE HORÁRIA -->
+        <div class="secao-grade">
+            <h2>🕐 Grade Horária - {{ aluno.turma.nome }}</h2>
+            
+            {% if grade_horario %}
+            <div class="grade-wrapper">
+                <table class="grade-table">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Segunda</th>
+                            <th>Terça</th>
+                            <th>Quarta</th>
+                            <th>Quinta</th>
+                            <th>Sexta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for horario, aulas in grade_horario.items %}
+                        <tr>
+                            <td class="horario-col">{{ horario }}</td>
+                            <td>{{ aulas.segunda|default:"--" }}</td>
+                            <td>{{ aulas.terca|default:"--" }}</td>
+                            <td>{{ aulas.quarta|default:"--" }}</td>
+                            <td>{{ aulas.quinta|default:"--" }}</td>
+                            <td>{{ aulas.sexta|default:"--" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="aviso-grade">Grade horária ainda não definida para sua turma.</p>
+            {% endif %}
+        </div>
+
+    </main>
+</div>
+
+<!-- MODAL DE IMPRESSÃO -->
+<div id="modal-impressao" class="modal-impressao">
+    <div class="modal-conteudo">
+        <span class="fechar-modal" onclick="fecharModal()">&times;</span>
+        
+        <div id="boletim-imprimir" class="boletim-imprimir">
+            <div class="boletim-header">
+                <h1>BOLETIM ESCOLAR</h1>
+                <p class="sistema">Documento gerado pelo SIGE</p>
+            </div>
+
+            <div class="boletim-info-aluno">
+                <div class="info-linha">
+                    <span class="label">Nome:</span>
+                    <span class="valor">{{ aluno.nome_completo }}</span>
+                </div>
+                <div class="info-linha">
+                    <span class="label">CPF:</span>
+                    <span class="valor">{{ aluno.cpf }}</span>
+                </div>
+                <div class="info-linha">
+                    <span class="label">Data de Nascimento:</span>
+                    <span class="valor">{{ aluno.data_nascimento|date:"d/m/Y" }}</span>
+                </div>
+                <div class="info-linha">
+                    <span class="label">Turma:</span>
+                    <span class="valor">{{ aluno.turma.nome }}</span>
+                </div>
+                <div class="info-linha">
+                    <span class="label">Turno:</span>
+                    <span class="valor">{{ aluno.turma.get_turno_display }}</span>
+                </div>
+                <div class="info-linha">
+                    <span class="label">Ano Letivo:</span>
+                    <span class="valor">{{ aluno.turma.ano }}</span>
+                </div>
+            </div>
+
+            <table class="boletim-tabela">
+                <thead>
+                    <tr>
+                        <th>Disciplina</th>
+                        <th>1º Bim</th>
+                        <th>2º Bim</th>
+                        <th>3º Bim</th>
+                        <th>4º Bim</th>
+                        <th>Média</th>
+                        <th>Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in disciplinas_com_notas %}
+                    <tr>
+                        <td>{{ item.disciplina.nome }}</td>
+                        <td>{{ item.nota.nota1|default:"--" }}</td>
+                        <td>{{ item.nota.nota2|default:"--" }}</td>
+                        <td>{{ item.nota.nota3|default:"--" }}</td>
+                        <td>{{ item.nota.nota4|default:"--" }}</td>
+                        <td><strong>{{ item.nota.media|floatformat:1|default:"--" }}</strong></td>
+                        <td>
+                            {% if item.nota and item.nota.nota1 != None and item.nota.nota2 != None and item.nota.nota3 != None and item.nota.nota4 != None %}
+                                {% if item.nota.media >= 6 %}
+                                    <strong>Aprovado</strong>
+                                {% elif item.nota.media > 4 %}
+                                    <strong>Recuperação</strong>
+                                {% else %}
+                                    <strong>Reprovado</strong>
+                                {% endif %}
+                            {% else %}
+                                --
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5"><strong>Média Geral</strong></td>
+                        <td><strong>{{ media_geral|floatformat:1|default:"--" }}</strong></td>
+                        <td>
+                            {% if total_notas_possiveis > 0 and total_notas_lancadas == total_notas_possiveis %}
+
+                                {% with tem_reprovacao=False tem_recuperacao=False %}
+
+                                    {% for item in disciplinas_com_notas %}
+                                        {% if item.nota and item.nota.nota1 != None and item.nota.nota2 != None and item.nota.nota3 != None and item.nota.nota4 != None %}
+                                            {% if item.nota.media <= 4 %}
+                                                {% with tem_reprovacao=True %}{% endwith %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if not tem_reprovacao %}
+                                        {% for item in disciplinas_com_notas %}
+                                            {% if item.nota and item.nota.nota1 != None and item.nota.nota2 != None and item.nota.nota3 != None and item.nota.nota4 != None %}
+                                                {% if item.nota.media < 6 %}
+                                                    {% with tem_recuperacao=True %}{% endwith %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if tem_reprovacao %}
+                                        <strong>Reprovado</strong>
+                                    {% elif tem_recuperacao %}
+                                        <strong>Recuperação</strong>
+                                    {% else %}
+                                        <strong>Aprovado</strong>
+                                    {% endif %}
+
+                                {% endwith %}
+
+                            {% else %}
+                                --
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="boletim-footer">
+                <p><strong>Data de emissão:</strong> {{ agora|date:"d/m/Y às H:i" }}</p>
+                <p class="assinatura">_______________________________</p>
+                <p class="assinatura-texto">Assinatura do Responsável</p>
+            </div>
+        </div>
+
+        <button onclick="window.print()" class="btn-imprimir-modal">
+            <i class="fa-solid fa-print"></i> Imprimir
+        </button>
+    </div>
+</div>
+
+<script>
+// Toggle disciplinas
+function toggleNotas(element) {
+    const card = element.parentElement;
+    const seta = element.querySelector('.seta');
+    
+    card.classList.toggle('aberto');
+    
+    if (card.classList.contains('aberto')) {
+        seta.style.transform = 'rotate(180deg)';
+    } else {
+        seta.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Modal de impressão
+function imprimirBoletim() {
+    document.getElementById('modal-impressao').style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modal-impressao').style.display = 'none';
+}
+
+// Fechar modal clicando fora
+window.onclick = function(event) {
+    const modal = document.getElementById('modal-impressao');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// GRÁFICO DE DESEMPENHO
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('graficoDesempenho');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for item in disciplinas_com_notas %}
+                        '{{ item.disciplina.nome|truncatechars:15 }}'{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Média',
+                    data: [
+                        {% for item in disciplinas_com_notas %}
+                            {{ item.nota.media|default_if_none:0|unlocalize }}{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ],
+                    backgroundColor: 'rgba(66, 133, 244, 0.7)',
+                    borderColor: 'rgba(66, 133, 244, 1)',
+                    borderWidth: 2,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: {
+                            stepSize: 2
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+
 {% endblock %}

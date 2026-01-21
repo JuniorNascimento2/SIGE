@@ -75,7 +75,7 @@
 
 
   <!-- 🌟 MENU LATERAL FIXO -->
-  <aside class="menu-lateral" id="menu-lateral">
+  <aside class="menu-lateral" id="menu-lateral" {% if request.user.is_authenticated and request.user.aluno %}style="display:none;"{% endif %}>
       <nav class="nav-lateral">
 
           <a href="{% url 'painel_super' %}">
