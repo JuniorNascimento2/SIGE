@@ -29,7 +29,7 @@
             </a>
 
             <!-- Gestão Escolar -->
-            {% if pode_ver_gestores %}
+            {% if request.user.is_superuser %}
             <a href="{% url 'listar_gestores' %}" class="card-usuario">
                 <i class="fas fa-user-tie icon"></i>
                 <span class="label">Gestão Escolar</span>

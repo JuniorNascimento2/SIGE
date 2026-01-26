@@ -233,6 +233,96 @@ main {
     transform: translateX(5px);
 }
 
+/* GRADE DO PROFESSOR */
+.secao-grade-professor {
+    grid-column: 1 / 3;
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+.secao-grade-professor h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.grade-wrapper {
+    overflow-x: auto;
+}
+
+.grade-table-professor {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.grade-table-professor thead th {
+    background: #f3f4f6;
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    color: #334155;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.grade-table-professor tbody td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+
+.grade-table-professor tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.grade-table-professor .horario-col {
+    font-weight: 600;
+    background: #f3f4f6;
+    text-align: left;
+    padding-left: 15px;
+    white-space: nowrap;
+}
+
+.aula-item {
+    background: #e0f2fe;
+    border-left: 3px solid #0284c7;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.aula-item:last-child {
+    margin-bottom: 0;
+}
+
+.aula-item strong {
+    display: block;
+    color: #0c4a6e;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.aula-item small {
+    color: #0369a1;
+    font-size: 0.8rem;
+}
+
+.sem-aula {
+    color: #9ca3af;
+}
+
+.aviso-grade {
+    text-align: center;
+    color: #666;
+    padding: 30px;
+    font-style: italic;
+}
+
 /* ================= RESPONSIVIDADE ================= */
 
 /* Tablets e Telas Médias */

@@ -8,8 +8,12 @@ from .forms import (
     LoginForm, ProfessorForm, AlunoForm, DisciplinaForm, TurmaForm,
     NotaForm, EditarPerfilForm, GestorForm
 )
+from datetime import datetime
+import calendar
+from django.contrib.auth.decorators import user_passes_test
 
-# -------------------- LOGIN / LOGOUT --------------------
+
+# ======================== LOGIN / LOGOUT ========================
 def login_view(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -33,7 +37,7 @@ def login_view(request):
             elif hasattr(user, 'aluno'):
                 return redirect('painel_aluno')
             elif hasattr(user, 'gestor'):
-                return redirect('painel_super')  # <- adicionado
+                return redirect('painel_super') 
     else:
         form = LoginForm()
 
@@ -47,9 +51,8 @@ def logout_view(request):
 
 
 
-from datetime import datetime
-import calendar
 
+# ======================== CALENDÁRIO ========================
 def gerar_calendario():
     hoje = datetime.today()
     ano = hoje.year
@@ -68,13 +71,15 @@ def gerar_calendario():
 
     return celulas
 
-# -------------------- SUPERUSUÁRIO --------------------
+
+
+
+# ========================== SUPERUSUÁRIO ========================
 def is_superuser(user):
     return user.is_superuser
 
 def is_super_ou_gestor(user):
     return user.is_superuser or hasattr(user, 'gestor')
-
 
 
 @login_required
@@ -83,9 +88,10 @@ def painel_super(request):
     foto_perfil_url = get_foto_perfil(request.user)
     ano_atual = datetime.now().year
 
-    # 🔥 FILTRO DE ANO
+    #  FILTRO DE ANO
     # Busca todos os anos disponíveis das turmas
     anos_disponiveis_qs = Turma.objects.values_list('ano', flat=True).distinct().order_by('-ano')
+
     anos_disponiveis = list(anos_disponiveis_qs)
     
     # Se não houver turmas, adiciona o ano atual
@@ -112,7 +118,7 @@ def painel_super(request):
     total_professores = Professor.objects.filter(disciplina__turma__in=turmas_ano_filtrado).distinct().count()
     total_disciplinas = Disciplina.objects.filter(turma__in=turmas_ano_filtrado).distinct().count()
 
-    return render(request, "core/painel_super.html", {
+    return render(request, "superusuario/painel_super.html", {
         "usuario": request.user,
         "nome_exibicao": get_nome_exibicao(request.user),
         "total_professores": total_professores,
@@ -122,8 +128,8 @@ def painel_super(request):
         "foto_perfil_url": foto_perfil_url,
         "agora": datetime.now(),
         "calendario": gerar_calendario(),
-        "anos_disponiveis": anos_disponiveis,  # ✅ Novo
-        "ano_filtro": ano_filtro,              # ✅ Novo
+        "anos_disponiveis": anos_disponiveis, 
+        "ano_filtro": ano_filtro,              
     })
 
 @login_required
@@ -164,14 +170,14 @@ def editar_perfil(request):
         form = EditarPerfilForm(request.POST, instance=user)
 
         if form.is_valid():
-            # ---------------------------
+            # ====================================
             # 📧 Salva dados básicos
-            # ---------------------------
+            # ====================================
             user = form.save(commit=False)
 
-            # ---------------------------
+            # ====================================
             # 🔐 Troca de senha (se houver)
-            # ---------------------------
+            # ====================================
             nova_senha = form.cleaned_data.get("nova_senha")
             if nova_senha:
                 user.set_password(nova_senha)
@@ -180,9 +186,9 @@ def editar_perfil(request):
             else:
                 user.save()
 
-            # ---------------------------
+            # ====================================
             # 📸 Foto de perfil
-            # ---------------------------
+            # ====================================
             foto = request.FILES.get("foto")
             if perfil and foto:
                 perfil.foto = foto
@@ -190,9 +196,9 @@ def editar_perfil(request):
 
             messages.success(request, "Perfil atualizado com sucesso!")
 
-            # ---------------------------
+            # ====================================
             # 🔁 Redirecionamento
-            # ---------------------------
+            # ====================================
             if user.is_superuser:
                 return redirect("painel_super")
             if hasattr(user, "professor"):
@@ -302,9 +308,9 @@ def get_nome_exibicao(user):
 
 
 
-# -------------------- PROFESSORES --------------------
+# ========================== PROFESSORES ==========================
 @login_required
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def listar_professores(request):
     query = request.GET.get('q', '')
     professores = Professor.objects.filter(nome_completo__icontains=query) if query else Professor.objects.all()
@@ -319,7 +325,7 @@ from .models import Professor
 
 
 @login_required
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def cadastrar_professor(request):
     if request.method == 'POST':
         form = ProfessorForm(request.POST, request.FILES, request=request)
@@ -344,7 +350,7 @@ def cadastrar_professor(request):
 
 
 @login_required
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def editar_professor(request, professor_id):
     professor = get_object_or_404(Professor, id=professor_id)
     
@@ -366,7 +372,7 @@ def editar_professor(request, professor_id):
 
 
 @login_required
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def excluir_professor(request, professor_id):
     professor = get_object_or_404(Professor, id=professor_id)
     professor.user.delete()
@@ -374,12 +380,12 @@ def excluir_professor(request, professor_id):
     messages.success(request, 'Professor removido.')
     return redirect('listar_professores')
 
-# ---- GESTOR (Painel da Gestão Escolar) ----
+# ==== GESTOR (Painel da Gestão Escolar) ====
 
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or (hasattr(u, 'gestor') and u.gestor.cargo in ['diretor', 'vice_diretor']))
+@user_passes_test(lambda u: u.is_superuser)
 def cadastrar_gestor(request):
     if request.method == 'POST':
         form = GestorForm(request.POST, request.FILES, request=request)
@@ -402,19 +408,19 @@ def cadastrar_gestor(request):
     return render(request, 'core/cadastrar_gestor.html', {'form': form})
 
 
-# ---- GESTOR (Painel da Gestão Escolar) ----
+# ==== GESTOR (Painel da Gestão Escolar) ====
 
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
+@user_passes_test(lambda u: u.is_superuser)
 def listar_gestores(request):
     gestores = Gestor.objects.select_related('user').all()
     return render(request, 'core/listar_gestores.html', {'gestores': gestores})
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or (hasattr(u, 'gestor') and u.gestor.cargo in ['diretor', 'vice_diretor']))
+@user_passes_test(lambda u: u.is_superuser)
 def excluir_gestor(request, gestor_id):
     gestor = get_object_or_404(Gestor, id=gestor_id)
     gestor.user.delete()
@@ -430,42 +436,23 @@ from .forms import GestorForm
 from .models import Gestor
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser)
 def editar_gestor(request, gestor_id):
     gestor = get_object_or_404(Gestor, id=gestor_id)
     user = gestor.user
 
-    # Permissão: superusuário ou o próprio gestor
-    is_super = request.user.is_superuser
-    is_mesmo_gestor = hasattr(request.user, 'gestor') and request.user.gestor == gestor
-
-    if not (is_super or is_mesmo_gestor):
-        messages.error(request, "Você não tem permissão para editar este gestor.")
-        return redirect('painel_super')
-
     if request.method == 'POST':
-        form = GestorForm(request.POST,request.FILES, instance=gestor, request=request)
+        form = GestorForm(request.POST, request.FILES, instance=gestor, request=request)
         if form.is_valid():
             form.save()
 
-            # Atualiza senha se foi informada
             nova_senha = form.cleaned_data.get("senha")
             if nova_senha:
                 user.set_password(nova_senha)
                 user.save()
 
-                # Mantém sessão ativa caso seja o próprio gestor alterando a senha
-                if is_mesmo_gestor:
-                    update_session_auth_hash(request, user)
-
             messages.success(request, "Gestor atualizado com sucesso!")
-
-            # 🔥 Redirecionamento correto:
-            # Superusuário volta para a lista de gestores
-            if is_super:
-                return redirect('listar_gestores')
-
-            # Gestor comum volta ao painel dele
-            return redirect('painel_super')
+            return redirect('listar_gestores')
 
         else:
             messages.error(request, "Corrija os erros abaixo.")
@@ -477,7 +464,8 @@ def editar_gestor(request, gestor_id):
 
 
 
-# -------------------- ALUNOS --------------------
+
+# ========================== ALUNO =========================
 @login_required
 @user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def listar_alunos(request):
@@ -487,7 +475,7 @@ def listar_alunos(request):
 
 
 @login_required
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def cadastrar_aluno(request):
     if request.method == 'POST':
         form = AlunoForm(request.POST, request.FILES, request=request)
@@ -510,7 +498,7 @@ def cadastrar_aluno(request):
     return render(request, 'core/cadastrar_aluno.html', {'form': form})
 
 @login_required
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def editar_aluno(request, aluno_id):
     aluno = get_object_or_404(Aluno, id=aluno_id)
 
@@ -543,7 +531,7 @@ def editar_aluno(request, aluno_id):
 
 
 @login_required
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def excluir_aluno(request, aluno_id):
     aluno = get_object_or_404(Aluno, id=aluno_id)
     aluno.user.delete()
@@ -557,7 +545,7 @@ def excluir_aluno(request, aluno_id):
 
 
 
-# -------------------- DISCIPLINAS, TURMAS E NOTAS --------------------
+# ========================== DISCIPLINAS, TURMAS E NOTAS ==========================
 # (mantém as lógicas originais do seu código, já estavam certas)
 
 
@@ -566,11 +554,17 @@ def excluir_aluno(request, aluno_id):
 
 @login_required
 def visualizar_disciplinas(request, disciplina_id):
-    # Verifica se é superusuário OU professor da disciplina
     disciplina = get_object_or_404(Disciplina, id=disciplina_id)
     
-    # Permite acesso se for superusuário OU professor da disciplina
-    if not request.user.is_superuser and not (hasattr(request.user, 'professor') and disciplina.professor == request.user.professor):
+    # Permite acesso se for:
+    # - superusuário
+    # - gestor
+    # - professor da disciplina
+    if not (
+        request.user.is_superuser or
+        hasattr(request.user, 'gestor') or
+        (hasattr(request.user, 'professor') and disciplina.professor == request.user.professor)
+    ):
         messages.error(request, 'Você não tem permissão para visualizar esta disciplina.')
         return redirect('login')
     
@@ -594,10 +588,12 @@ def visualizar_disciplinas(request, disciplina_id):
 
 
 
+
 @login_required
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor') )
+
 def editar_disciplina(request, disciplina_id):
-    if not request.user.is_superuser:
-        return redirect('login')
+   
 
     disciplina = get_object_or_404(Disciplina, id=disciplina_id)
 
@@ -628,6 +624,8 @@ def editar_disciplina(request, disciplina_id):
 
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
+
 def excluir_disciplina(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, id=disciplina_id)
     turma_id = disciplina.turma.id  # salva antes de deletar
@@ -645,10 +643,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Turma
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def listar_turmas(request):
-    if not request.user.is_superuser:
-        return redirect('login')
-
     ano_atual = timezone.localtime(timezone.now()).year
     query = request.GET.get('q', '').strip()
 
@@ -693,9 +689,9 @@ from django.shortcuts import render, redirect
 from .models import Turma
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def cadastrar_turma(request):
-    if not request.user.is_superuser:
-        return redirect('login')
+
 
     erro = None
 
@@ -707,7 +703,7 @@ def cadastrar_turma(request):
         turno = request.POST.get('turno')
         ano = request.POST.get('ano')
 
-        # -------- VALIDAÇÕES --------
+        # =========== VALIDAÇÕES ===========
         try:
             ano = int(ano)
         except (TypeError, ValueError):
@@ -738,10 +734,8 @@ def cadastrar_turma(request):
 
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def editar_turma(request, turma_id):
-    if not request.user.is_superuser:
-        return redirect('login')
-
     turma = Turma.objects.get(id=turma_id)
     erro = None
 
@@ -768,9 +762,8 @@ def editar_turma(request, turma_id):
 
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser or (hasattr(u, 'gestor') and u.gestor.cargo != 'secretario'))
 def excluir_turma(request, turma_id):
-    if not request.user.is_superuser:
-        return redirect('login')
 
     turma = get_object_or_404(Turma, id=turma_id)
     turma.delete()
@@ -780,6 +773,7 @@ def excluir_turma(request, turma_id):
 # PROFESSOR
 @login_required
 def painel_professor(request):
+    """Tela principal do professor com estatísticas e visão geral"""
     if not hasattr(request.user, 'professor'):
         return redirect('login')
     
@@ -792,23 +786,28 @@ def painel_professor(request):
     # Anos disponíveis baseados nas turmas onde o professor leciona
     anos_disponiveis_qs = Turma.objects.filter(
         disciplina__professor=professor
-    ).values_list('ano', flat=True).distinct().order_by('-ano')
+    ).values_list('ano', flat=True).distinct().order_by('=ano')
     anos_disponiveis = list(anos_disponiveis_qs)
     
     ano_atual = datetime.now().year
     
-    # Se não houver anos, adiciona o ano atual
     if not anos_disponiveis:
         anos_disponiveis = [ano_atual]
     
     # Filtro de ano
     ano_filtro = request.GET.get('ano')
-    try:
-        ano_filtro = int(ano_filtro) if ano_filtro else ano_atual
-    except ValueError:
-        ano_filtro = ano_atual
     
-    # Garante que o ano_filtro existe na lista
+    if ano_filtro:
+        # Se veio do GET, usa e salva na sessão
+        try:
+            ano_filtro = int(ano_filtro)
+            request.session['ano_filtro_professor'] = ano_filtro
+        except ValueError:
+            ano_filtro = request.session.get('ano_filtro_professor', ano_atual)
+    else:
+        # Se não veio no GET, tenta pegar da sessão
+        ano_filtro = request.session.get('ano_filtro_professor', ano_atual)
+    
     if ano_filtro not in anos_disponiveis:
         anos_disponiveis.append(ano_filtro)
         anos_disponiveis.sort(reverse=True)
@@ -833,7 +832,7 @@ def painel_professor(request):
     
     for disciplina in disciplinas_filtradas:
         alunos_disciplina = Aluno.objects.filter(turma=disciplina.turma)
-        total_notas_possiveis += alunos_disciplina.count() * 4  # 4 bimestres
+        total_notas_possiveis += alunos_disciplina.count() * 4
         
         notas = Nota.objects.filter(disciplina=disciplina)
         for nota in notas:
@@ -865,6 +864,8 @@ def painel_professor(request):
         
         notas_possiveis_disc = alunos_count * 4
         
+        
+
         disciplinas_detalhadas.append({
             'disciplina': disciplina,
             'alunos_count': alunos_count,
@@ -889,19 +890,11 @@ def painel_professor(request):
         'ano_filtro': ano_filtro,
     })
 
-@login_required
-def disciplinas_professor(request):
-    if not hasattr(request.user, 'professor'):
-        return redirect('login')
-    professor = request.user.professor
-    disciplinas = Disciplina.objects.filter(professor=professor)
-    foto_perfil_url = get_foto_perfil(request.user)
-    return render(request, 'core/disciplinas_professor.html', {
-        'disciplinas': disciplinas,
-        'foto_perfil_url': foto_perfil_url,
-    }) 
 
 
+
+
+# ==================== 2. LISTAR TURMAS DO PROFESSOR ====================
 # ==================== 2. LISTAR TURMAS DO PROFESSOR ====================
 @login_required
 def disciplinas_professor(request):
@@ -920,7 +913,7 @@ def disciplinas_professor(request):
     # Anos disponíveis
     anos_disponiveis_qs = Turma.objects.filter(
         id__in=turmas_ids
-    ).values_list('ano', flat=True).distinct().order_by('-ano')
+    ).values_list('ano', flat=True).distinct().order_by('=ano')
     anos_disponiveis = list(anos_disponiveis_qs)
     
     ano_atual = datetime.now().year
@@ -928,12 +921,19 @@ def disciplinas_professor(request):
     if not anos_disponiveis:
         anos_disponiveis = [ano_atual]
     
-    # Filtro de ano
+    # 🔥 LÓGICA DO FILTRO COM SESSÃO
     ano_filtro = request.GET.get('ano')
-    try:
-        ano_filtro = int(ano_filtro) if ano_filtro else ano_atual
-    except ValueError:
-        ano_filtro = ano_atual
+    
+    if ano_filtro:
+        # Se veio do GET, usa e salva na sessão
+        try:
+            ano_filtro = int(ano_filtro)
+            request.session['ano_filtro_professor'] = ano_filtro
+        except ValueError:
+            ano_filtro = request.session.get('ano_filtro_professor', ano_atual)
+    else:
+        # Se não veio no GET, tenta pegar da sessão
+        ano_filtro = request.session.get('ano_filtro_professor', ano_atual)
     
     if ano_filtro not in anos_disponiveis:
         anos_disponiveis.append(ano_filtro)
@@ -1117,6 +1117,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor') or hasattr(u, 'professor'))
+
 def lancar_nota(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, id=disciplina_id)
 
@@ -1194,24 +1196,6 @@ HORARIOS = {
     ],
 }
 
-def gerar_calendario():
-    hoje = datetime.today()
-    ano = hoje.year
-    mes = hoje.month
-
-    cal = calendar.monthcalendar(ano, mes)
-    celulas = []
-
-    for semana in cal:
-        for dia in semana:
-            celulas.append({
-                "numero": dia,
-                "vazio": dia == 0,
-                "hoje": dia == hoje.day,
-            })
-
-    return celulas
-
 
 @login_required
 def painel_aluno(request):
@@ -1277,14 +1261,14 @@ def painel_aluno(request):
             situacao_geral = "Aprovado"
             situacao_classe = "aprovado"
         else:
-            situacao_geral = "--"
+            situacao_geral = "=="
             situacao_classe = ""
     else:
-        situacao_geral = "--"
+        situacao_geral = "=="
         situacao_classe = ""
 
     # ========================================
-    # GRADE HORÁRIA - FORMATADA PARA O ALUNO
+    # GRADE HORÁRIA = FORMATADA PARA O ALUNO
     # ========================================
     grade_formatada = None
     
@@ -1334,9 +1318,8 @@ def painel_aluno(request):
     })
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def cadastrar_disciplina_para_turma(request, turma_id):
-    if not request.user.is_superuser:
-        return redirect('login')
 
     turma = get_object_or_404(Turma, id=turma_id)
 
@@ -1371,6 +1354,7 @@ def cadastrar_disciplina_para_turma(request, turma_id):
 
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser or hasattr(u, 'gestor'))
 def listar_disciplinas_turma(request, turma_id):
     turma = get_object_or_404(Turma, id=turma_id)
 
@@ -1480,9 +1464,9 @@ def grade_horaria(request, turma_id):
 
     disciplinas_turma = Disciplina.objects.filter(turma=turma)
 
-    # ----------------------------------------------
+    # =============================================================
     # 1) MAPEAR TODAS AS OCUPAÇÕES DE PROFESSORES
-    # ----------------------------------------------
+    # =============================================================
     ocupados = {}   # {professor_id: {(dia, index)} }
 
     outras_grades = GradeHorario.objects.exclude(turma=turma)
@@ -1506,9 +1490,9 @@ def grade_horaria(request, turma_id):
 
                 ocupados[prof].add((dia, idx))
 
-    # ----------------------------------------------
+    # =============================================================
     # 2) SALVAR (POST)
-    # ----------------------------------------------
+    # =============================================================
     if request.method == "POST":
         new_data = {dia: [] for dia in dias}
 
@@ -1524,10 +1508,10 @@ def grade_horaria(request, turma_id):
         messages.success(request, "Grade horária atualizada com sucesso!")
         return redirect("grade_horaria", turma_id=turma.id)
 
-    # ----------------------------------------------
+    # =============================================================
     # 3) MONTAR TABELA PARA O TEMPLATE
     #     → Aqui vamos filtrar disciplinas ocupadas
-    # ----------------------------------------------
+    # =============================================================
     rows = []
     for i, horario in enumerate(horarios):
         row = {"index": i, "horario": horario, "cols": []}
@@ -1540,9 +1524,9 @@ def grade_horaria(request, turma_id):
             if isinstance(lista, list) and i < len(lista):
                 valor = lista[i] or ""
 
-            # ----------------------------
+            # =====================================
             # FILTRAR DISCIPLINAS DISPONÍVEIS
-            # ----------------------------
+            # =====================================
             disciplinas_disponiveis = []
             for d in disciplinas_turma:
 
